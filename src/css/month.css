@@ -96,3 +96,7 @@
     background-color: rgb(235, 235, 235);
     cursor: initial;
 }
+
+.dragging {
+    opacity: 0;
+}

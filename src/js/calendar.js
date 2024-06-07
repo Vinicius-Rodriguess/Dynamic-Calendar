@@ -867,7 +867,15 @@ const modeMonth = {
             }
 
             day.addEventListener("dragenter", () => {
+                if (day.podeMudar) {
                     modeMonth.updatePosition(day)
+                    day.podeMudar = false
+                }
+            })
+
+            day.addEventListener("dragleave", () => {
+                
+                day.podeMudar = true
             })
 
             containerDays.appendChild(day)
@@ -897,15 +905,14 @@ const modeMonth = {
                     modeMonth.matrizDays[line + i][0].appendChild(modeMonth.createEvent(event))
                     diasDeDuracao = diasDeDuracao - 7
                     i++
-                    console.log("whiele")
                 }
 
                 event.width = diasDeDuracao * widthEvent
                 modeMonth.matrizDays[line + i][0].appendChild(modeMonth.createEvent(event))
                 return
+
             }
             
-            console.log("um só")
             event.width = diasDeDuracao * widthEvent
             modeMonth.matrizDays[line][initialDate.getDay()].appendChild(modeMonth.createEvent(event))
         })
@@ -945,7 +952,6 @@ const modeMonth = {
         container.addEventListener("dragstart", () => {
             modeMonth.eventDrag = event
             container.classList.add("dragging")
-            console.log(event)
         })
 
         container.addEventListener("dragend", () => container.classList.remove("dragging"))
@@ -955,7 +961,7 @@ const modeMonth = {
     },
 
     updatePosition(date) {
-
+        console.log("foi    ")
         if (modeMonth.eventDrag.action == "arrastaMenos") {
             modeMonth.eventDrag.initialDate = calendar.formatDate(new Date(calendar.year, date.monthDate, date.date))
         }
