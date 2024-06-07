@@ -1,0 +1,92 @@
+.container-week {
+    background-color: antiquewhite;
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-height: 31rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    background-color: #ccc;
+    padding: 1px;
+    gap: 1px;
+}
+
+.cont-hours {
+    overflow-y: auto;
+}
+
+.area {
+    background-color: #fff;
+    height: 5rem;
+    padding: 5px;
+    cursor: pointer;
+    position: relative;
+    justify-content: space-between;
+    display: flex;
+}
+
+.event {
+    z-index: 1;
+    border-radius: 0.2rem;
+    color: #fff;
+    width: 50%;
+    border-radius: 0.2rem;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.change-days {
+    text-align: center;
+    cursor: grab;
+    border-radius: 0.2rem;
+    flex: 1;
+}
+
+.change-hours {
+    border-radius: 0.2rem;
+    max-height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: move;
+    width: 100%;
+}
+
+.dragging {
+    opacity: 0;
+}
+
+.diaTodo {
+    background-color: rgb(255, 255, 255);
+}
+
+.xx, .hora {
+    height: 2rem;
+}
+
+.xx {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.week-day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.5rem;
+    padding: 0.5rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    background-color: #fff;
+}
+
+.today-week  {
+    background-color: rgb(253, 250, 198);
+}

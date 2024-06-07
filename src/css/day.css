@@ -1,0 +1,75 @@
+.container-day {
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-height: 31rem;
+}
+
+.week {
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 1rem;
+    color: #092a57;
+    border: 1px solid #ccc;
+}
+
+.df {
+    display: flex;
+}
+
+.all-day {
+    padding: 0.5rem;
+    width: 4rem;
+    border: 1px solid #ccc;
+}
+
+.area-all-day {
+    border: 1px solid #ccc;
+    flex: 1;
+    gap: 1rem;
+    background-color: rgb(241, 241, 241);
+    padding: 0.5rem;
+    display: flex;
+    cursor: pointer;
+}
+
+.dg {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 1px;
+    gap: 1px;
+    background-color: #ccc;
+    max-height: 25rem;
+    overflow-y: auto;
+}
+
+.hour {
+    padding: 0.3rem;
+    background-color: #fff;
+    width: 4rem;
+    text-align: center;
+    border-right: 1px solid #ccc;
+}
+
+.area-hour {
+    background-color: rgb(241, 241, 241);
+    width: 48.7rem;
+    cursor: pointer;
+    height: 2rem;
+    display: flex;
+}
+
+.event-day {
+    z-index: 1;
+    border-radius: 0.2rem;
+    color: #fff;
+    margin: 1rem;
+    flex: 1;
+    border-radius: 0.2rem;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+* {
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    background-color: rgb(12, 12, 119);
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+::-webkit-scrollbar {
+    width: 0.1rem;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #2e99f0;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: #3c769c;
+}
+
+.container-calendar {
+    width: 55rem;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+header > div {
+    flex: 1;
+}
+
+.end {
+    justify-content: end;
+}
+
+.center {
+    justify-content: center;
+}
+
+.btn {
+    background-color: rgb(227, 227, 255);
+    border: none;
+    padding: 0.5rem;
+    min-width: 2rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+    transition: background-color 0.2s linear;
+}
+
+.btn:hover {
+    background-color: rgb(214, 218, 255);
+}
+
+.gap-3rem {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.gap-1rem {
+    display: flex;
+    gap: 1rem;
+}
+
+#week,
+#month,
+#day,
+#year {
+    color: #0f448a;
+    font-size: 1.4rem;
+}

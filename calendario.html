@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendario</title>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="./src/css/calendar.css">
+  <link rel="stylesheet" href="./src/css/modais.css">
+  <link rel="stylesheet" href="./src/css/day.css">
+  <link rel="stylesheet" href="./src/css/list.css">
+  <link rel="stylesheet" href="./src/css/month.css">
+  <link rel="stylesheet" href="./src/css/week.css">
+
+  <script type="module" src="./src/js/calendar.js" defer></script>
+</head>
+
+<body>
+  <div class="container-calendar">
+    <header>
+      <div class="gap-1rem">
+        <div class="gap-3rem">
+          <i class="bi bi-arrow-left btn" id="btnBackMonth"></i>
+          <i class="bi bi-arrow-right btn" id="btnNextMonth"></i>
+        </div>
+        <i class="bi bi-calendar-event btn" id="today"></i>
+        <i class="btn" id="addEvent">+</i>
+      </div>
+      <div class="gap-3rem center">
+        <h2 id="day" class="hide"></h2>
+        <h2 id="week" class="hide"></h2>
+        <h2 id="month">Julho</h2>
+        <h2 id="year">2024</h2>
+      </div>
+      <div class="gap-3rem end">
+        <button class="btn" id="btnMonth">Mês</button>
+        <button class="btn" id="btnWeek">Semana</button>
+        <button class="btn" id="btnOneDay">Dia</button>
+        <button class="btn" id="btnList">List</button>
+      </div>
+    </header>
+    <div class="container-general"></div>
+  </div>
+
+  <div class="background-modal hide">
+    <div class="container-modal">
+      <i class="bi bi-x-lg" id="btn-close-modal"></i>
+      <span id="error-mensage"></span>
+      <form class="form-container" id="modal-form">
+        <i class="bi bi-pencil-square"></i>
+        <input type="text" name="title" id="title-input" placeholder="Title" class="input">
+
+        <p>All Day</p>
+        <input type="checkbox" name="allDay">
+
+        <i class="bi bi-tag"></i>
+        <div class="container-tag"></div>
+
+        <label for="initialDate">Data inicial</label>
+        <input type="datetime-local" id="initialDate" class="input">
+        <label for="finalDate">Data Final</label>
+        <input type="datetime-local" id="finalDate" class="input">
+        <i class="bi bi-body-text"></i>
+        <textarea name="description" id="description-input" placeholder="Description" class="input"></textarea>
+
+      </form>
+      <div class="btns-modal">
+        <div>
+          <i class="bi bi-trash3 hide" id="btn-remove"></i>
+        </div>
+        <div>
+          <button id="btn-save-modal">Save</button>
+          <button id="btn-edit-modal" class="hide">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="background-modal-2 hide">
+    <div class="container-eventss ">
+      <i class="bi bi-x-lg" id="btn-close-modal2"></i>
+      <div class="results"></div>
+    </div>
+  </div>
+
+
+  <div class="background-modal-3 hide">
+    <div class="container-modal">
+      <i class="bi bi-x-lg" id="btn-close-modal-tag"></i>
+      <form class="form-container" id="form-modalTags">
+        <i class="bi bi-pencil-square"></i>
+        <input type="text" name="title" placeholder="Title" class="input">
+        <i class="bi bi-palette"></i>
+        <input type="color" class="input" name="color">
+      </form>
+      <div class="btns-modal">
+        <button id="btn-save-modal-tag">Save</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
