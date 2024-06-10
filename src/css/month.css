@@ -100,3 +100,7 @@
 .dragging {
     opacity: 0;
 }
+
+.selected {
+    background-color: rgb(232, 238, 255);
+}

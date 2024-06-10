@@ -1,4 +1,4 @@
-import { calendar } from "./calendar.js"
+import { calendar, modeMonth } from "./calendar.js"
 
 export const modal = {
     element: document.querySelector(".background-modal"),
@@ -56,8 +56,8 @@ export const modal = {
             return
         }
 
-        const dateInitial = calendar.formatDate(new Date(calendar.year, calendar.month, calendar.diaInicial))
-        const dateFinal = calendar.formatDate(new Date(calendar.year, calendar.month, calendar.diaFinal))
+        const dateInitial = calendar.formatDate(new Date(calendar.year, calendar.month, modeMonth.initialDay))
+        const dateFinal = calendar.formatDate(new Date(calendar.year, calendar.month, modeMonth.finalDay))
 
         if (+calendar.diaInicial < +calendar.diaFinal) {
             this.form.initialDate.value = dateInitial

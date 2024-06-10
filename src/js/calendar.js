@@ -10,7 +10,7 @@ export const calendar = {
 
     month: new Date().getMonth(),
     week: 1,
-    year:  new Date().getFullYear(),
+    year: new Date().getFullYear(),
     day: new Date().getDate(),
 
     container: document.querySelector(".container-general"),
@@ -526,7 +526,7 @@ const modeWeek = {
 
         const container = document.createElement("div")
         container.classList.add("container-week")
-        
+
         modeWeek.changeWeek()
 
         container.appendChild(modeWeek.divWeek())
@@ -634,19 +634,19 @@ const modeWeek = {
     render(event) {
         event.forEach(event => {
             const initialDate = new Date(event.initialDate)
-         
+
             const diaInicialDaSemana = modeWeek.currentWeek[0].day
             const diaFinalDaSemana = modeWeek.currentWeek[6].day
 
-            if (initialDate.getDate() < diaInicialDaSemana || 
-                initialDate.getDate() > diaFinalDaSemana || 
-                initialDate.getMonth() !== calendar.month || 
+            if (initialDate.getDate() < diaInicialDaSemana ||
+                initialDate.getDate() > diaFinalDaSemana ||
+                initialDate.getMonth() !== calendar.month ||
                 initialDate.getFullYear() !== calendar.year) return
 
 
             const initialDay = new Date(event.initialDate).getDate()
             const finalDay = new Date(event.finalDate).getDate()
-            
+
             const initialHour = new Date(event.initialDate).getHours()
             const finalHour = new Date(event.finalDate).getHours()
 
@@ -765,12 +765,16 @@ const modeWeek = {
     },
 }
 
-const modeMonth = {
+export const modeMonth = {
     matrizDays: [],
     areas: 42,
     getLastDayThisMonth: new Date(calendar.year, calendar.month + 1, 0).getDate(),
     firstDayOfWeek: new Date(calendar.year, calendar.month, 1).getDay() - 1,
     eventDrag: null,
+
+    selecting: false,
+    initialDay: null,
+    finalDay: null, 
 
     nextDate() {
         calendar.month++
@@ -867,15 +871,49 @@ const modeMonth = {
             }
 
             day.addEventListener("dragenter", () => {
-                if (day.podeMudar) {
+                if (day.change) {
                     modeMonth.updatePosition(day)
-                    day.podeMudar = false
+                    day.change = false
                 }
             })
 
             day.addEventListener("dragleave", () => {
-                
-                day.podeMudar = true
+                day.change = true
+            })
+
+            day.addEventListener("click", () => {
+                modal.updateDate(day.date)
+                modal.open()
+            })
+
+            day.addEventListener("mousedown", (e) => {
+                if (!e.target.classList.contains("day")) return
+                modeMonth.selecting = true
+                modeMonth.initialDay = day.date
+            })
+
+            day.addEventListener("mousemove", () => {
+                if (!modeMonth.selecting) return
+                modeMonth.finalDay = day.date
+                modeMonth.matrizDays.forEach(semana => {
+                    semana.forEach(day => {
+                        if (day.classList.contains("disable")) return
+
+                        if (day.date <= modeMonth.initialDay && day.date >= modeMonth.finalDay ||
+                            day.date >= modeMonth.initialDay && day.date <= modeMonth.finalDay) {
+                            day.classList.add("selected")
+                        } else {
+                            day.classList.remove("selected")
+                        }
+                    })
+                })
+            })
+
+            day.addEventListener("mouseup", () => {
+                modeMonth.selecting = false
+                modeMonth.matrizDays.forEach(sem => sem.forEach(day => day.classList.remove("selected")))
+                modal.open()
+                modal.updateDate()
             })
 
             containerDays.appendChild(day)
@@ -912,7 +950,7 @@ const modeMonth = {
                 return
 
             }
-            
+
             event.width = diasDeDuracao * widthEvent
             modeMonth.matrizDays[line][initialDate.getDay()].appendChild(modeMonth.createEvent(event))
         })
@@ -961,7 +999,6 @@ const modeMonth = {
     },
 
     updatePosition(date) {
-        console.log("foi    ")
         if (modeMonth.eventDrag.action == "arrastaMenos") {
             modeMonth.eventDrag.initialDate = calendar.formatDate(new Date(calendar.year, date.monthDate, date.date))
         }
