@@ -1,7 +1,7 @@
-import { calendar, modeMonth } from "./calendar.js"
+import { calendar } from "./calendar.js"
 
 export const modal = {
-    element: document.querySelector(".background-modal"),
+    element: document.querySelector(".mod-add-event"),
     form: document.querySelector("#modal-form"),
     btnSave: document.querySelector("#btn-save-modal"),
     btnEdit: document.querySelector("#btn-edit-modal"),
@@ -12,22 +12,41 @@ export const modal = {
     optionSelect: document.createElement("p"),
 
     initialize() {
-        modal.btnClose.addEventListener("click", () =>{
-            modal.close()
-        })
+        modal.btnClose.addEventListener("click", () => modal.close())
+
         modal.btnSave.addEventListener("click", () => {
             calendar.addEvent()
-            modal.close()
         })
+
         modal.btnEdit.addEventListener("click", () => {
             calendar.updateEvent(modal.event)
             modal.close()
         })
+
         modal.btnRemove.addEventListener("click", () => {
             calendar.removeEvent(modal.event)
             modal.close()
         })
+
+        modal.form.initialDate.addEventListener("input", () => {
+            if (modal.form.finalDate.value == "" || modal.form.allDay.checked) {
+                modal.form.finalDate.value = modal.form.initialDate.value
+            }
+        })
+
+        modal.form.allDay.addEventListener("input", () => {
+            if (modal.form.finalDate.disabled) {
+                modal.form.finalDate.disabled = false
+                modal.form.finalDate.value = modal.form.initialDate.value
+                return
+            }
+            modal.form.finalDate.disabled = true
+            modal.form.finalDate.value = modal.form.initialDate.value
+
+        })
+
         modal.createTags()
+        modalTag.initialize()
     },
 
     open() {
@@ -48,28 +67,37 @@ export const modal = {
         modal.event = null
     },
 
-    updateDate(day) {
-        if (day) {
-            const date = calendar.formatDate(new Date(calendar.year, calendar.month, day))
-            this.form.initialDate.value = date
-            this.form.finalDate.value = date
+    updateDate(data) {
+        if (data.mode == "onlyDay") {
+            const date = calendar.formatDate(new Date(data.year, data.month, data.day))
+            modal.form.initialDate.value = date
+            modal.form.finalDate.value = date
             return
         }
 
-        const dateInitial = calendar.formatDate(new Date(calendar.year, calendar.month, modeMonth.initialDay))
-        const dateFinal = calendar.formatDate(new Date(calendar.year, calendar.month, modeMonth.finalDay))
+        let dateInitial = calendar.formatDate(data.initial)
+        let dateFinal = calendar.formatDate(data.final)
 
-        if (+calendar.diaInicial < +calendar.diaFinal) {
-            this.form.initialDate.value = dateInitial
-            this.form.finalDate.value = dateFinal
+        if (data.mode == "day") {            
+            dateInitial = calendar.formatDate(new Date(calendar.year, calendar.month, calendar.day).setHours(data.initial))
+            dateFinal = calendar.formatDate(new Date(calendar.year, calendar.month, calendar.day).setHours(data.final))
+        }
+
+        if (data.mode == "gridWeek") {
+            dateInitial = calendar.formatDate(data.initial)
+            dateFinal = calendar.formatDate(data.final)
+        }
+
+        if (new Date(dateInitial) < new Date(dateFinal)) {
+            modal.form.initialDate.value = dateInitial
+            modal.form.finalDate.value = dateFinal
         } else {
-            this.form.initialDate.value = dateFinal
-            this.form.finalDate.value = dateInitial
+            modal.form.initialDate.value = dateFinal
+            modal.form.finalDate.value = dateInitial
         }
     },
 
     renderEvent(event) {
-        console.log(event)
         modal.event = event
         modal.form.title.value = event.title
         modal.form.description.value = event.description
@@ -83,50 +111,46 @@ export const modal = {
     },
 
     tags: [
-        {name: "Urgente", color: "red",},
-        {name: "Importante",color: "orange",},
-        {name: "Normal",color: "blue",},
-        {name: "Secretaria",color: "purple",},
-        {name: "Financeiro",color: "gray",},
+        { name: "Urgente", color: "red", },
+        { name: "Importante", color: "orange", },
+        { name: "Normal", color: "blue", },
+        { name: "Secretaria", color: "purple", },
+        { name: "Financeiro", color: "gray", },
     ],
 
     createTags() {
         modal.element.addEventListener("click", (e) => {
-            if (e.target.classList.contains("option-select") || e.target.classList.contains("container-tag")) return
-            if (!e.target.classList.contains("container-options")) containerOptions.classList.add("hide")
+            if (e.target.classList.contains("mod-option-select") || e.target.classList.contains("mod-container-tag")) return
+            if (!e.target.classList.contains("mod-container-options")) containerOptions.classList.add("hide")
         })
 
-        const containerTag = document.querySelector(".container-tag")
+        const containerTag = document.querySelector(".mod-container-tag")
         containerTag.addEventListener("click", () => containerOptions.classList.toggle("hide"))
 
-        modal.optionSelect.classList.add("option-select")
+        modal.optionSelect.classList.add("mod-option-select")
         modal.optionSelect.innerHTML = "Escolha uma Tag"
 
         const containerOptions = document.createElement("div")
-        containerOptions.classList.add("container-options", "hide")
+        containerOptions.classList.add("mod-container-options", "hide")
 
         modal.tags.forEach(tag => {
             const option = document.createElement("p")
-            option.classList.add("option")
-        
+            option.classList.add("mod-option")
+
             const color = modal.createColor(tag)
 
             option.appendChild(color)
             option.innerHTML += tag.name
-            
-            option.addEventListener("click", () => {
-                modal.changeOptionSelect(tag)
-            })
+
+            option.addEventListener("click", () => modal.changeOptionSelect(tag))
 
             containerOptions.appendChild(option)
         })
 
         const newTag = document.createElement("p")
-        newTag.classList.add("option")
+        newTag.classList.add("mod-option")
         newTag.innerHTML = "+ Nova Tag"
-        newTag.addEventListener("click", () => {
-            modalTag.open()
-        })
+        newTag.addEventListener("click", () => modalTag.open())
 
         containerOptions.appendChild(newTag)
 
@@ -136,7 +160,7 @@ export const modal = {
 
     createColor(tag) {
         const color = document.createElement("span")
-        color.classList.add("circle")
+        color.classList.add("mod-circle")
         color.style.backgroundColor = tag.color
         return color
     },
@@ -149,10 +173,9 @@ export const modal = {
     },
 }
 
-
-export const modalTag = {
+const modalTag = {
     form: document.querySelector("#form-modalTags"),
-    element: document.querySelector(".background-modal-3"),
+    element: document.querySelector(".mod-tags"),
 
     open() {
         modalTag.element.classList.remove("hide")
@@ -169,7 +192,7 @@ export const modalTag = {
 
     initialize() {
         document.querySelector("#btn-close-modal-tag").addEventListener("click", () => modalTag.close())
-        document.querySelector("#btn-save-modal-tag").addEventListener("click", () => modalTag.createTag())    
+        document.querySelector("#btn-save-modal-tag").addEventListener("click", () => modalTag.createTag())
     },
 
     createTag() {
@@ -183,29 +206,3 @@ export const modalTag = {
         modalTag.close()
     },
 }
-
-export const modalEvents = {
-    element: document.querySelector(".background-modal-2"),
-    btnClose: document.querySelector("#btn-close-modal2"),
-
-    initialize() {
-        modalEvents.btnClose.addEventListener("click", () => modalEvents.close())
-    },
-
-    open() {
-        modalEvents.element.classList.remove("hide")
-    },
-
-    close() {
-        modalEvents.element.classList.add("hide")
-    },
-
-    showEvent(hiddenChildren) {
-        hiddenChildren.forEach(children => {
-            children.classList.remove("hide")
-            document.querySelector(".results").appendChild(children)
-        })
-    },
-}
-
-
