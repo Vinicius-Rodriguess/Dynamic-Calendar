@@ -25,9 +25,9 @@ export const calendar = {
     yearHtml: document.querySelector('#year'),
 
     events: [
-        { id: 0, title: '1 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'trabalho', color: 'red' }},
-        { id: 1, title: '10 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'trabalho', color: 'gray' }},
-        { id: 2, title: '2 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'escola', color: 'orange' }},
+        { id: 0, title: '1 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'trabalho', color: 'red' } },
+        { id: 1, title: '10 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'trabalho', color: 'gray' } },
+        { id: 2, title: '2 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'escola', color: 'orange' } },
         // { id: 3, title: '3 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-18T05:25', finalDate: '2024-06-20T21:26', tag: { name: 'trabalho', color: 'green' } },
         // { id: 5, title: '5 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-11T02:25', finalDate: '2024-06-21T21:26', tag: { name: 'trabalho', color: 'blue' } },
         // { id: 6, title: '66666', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T02:25', finalDate: '2024-06-10T21:26', tag: { name: 'trabalho', color: 'blue' }, allDay: true },
@@ -115,11 +115,24 @@ export const calendar = {
         if (calendar.mode === 'day') mDay.render([event])
         if (calendar.mode === 'list') mList.init()
         if (calendar.mode === 'month') mMonth.render([event])
+
+        if (calendar.mode === 'month') {
+            const initialDate = new Date(event.initialDate)
+            const line = +(((initialDate.getDate() + calendar.getFirstDayOfWeek()) / 7).toString().slice(0, 1))
+            mMonth.agroupChildren(mMonth.matrizDays[line][initialDate.getDay()].element)
+        }
+
     },
 
     removeEvent(event) {
         event.elements.forEach(e => e.remove())
         if (calendar.mode === 'list') mList.init()
+
+        if (calendar.mode === 'month') {
+            const initialDate = new Date(event.initialDate)
+            const line = +(((initialDate.getDate() + calendar.getFirstDayOfWeek()) / 7).toString().slice(0, 1))
+            mMonth.agroupChildren(mMonth.matrizDays[line][initialDate.getDay()].element)
+        }
 
         // isso vai ser um fetch
         calendar.events = calendar.events.filter(e => e.id != event.id)
@@ -254,15 +267,15 @@ const mDay = {
         divHorus.classList.add('d-grid')
 
         for (let i = 0; i < 48; i++) {
-            
+
             const hour = document.createElement('div')
             hour.classList.add('d-hour')
-        
+
             const hours = Math.floor(i / 2)
             const minutes = i % 2 === 0 ? 0 : 30
-                
+
             hour.innerHTML = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
-        
+
             const areaHour = document.createElement('div')
             areaHour.classList.add('d-area-hour')
             areaHour.hour = hours
@@ -325,7 +338,7 @@ const mDay = {
             newDate.setHours(hour, minutes)
             newDate.setMonth(newDate.getMonth() + 1)
             eventDragged.initialDate = calendar.formatDate(newDate)
-        } 
+        }
 
         if (eventDragged.action == 'hourMenos') {
             const newDate = new Date(eventDragged.finalDate)
@@ -366,7 +379,7 @@ const mDay = {
 
             if (initialMinutes >= 30) event.index = initialHour * 2 + 1
             else event.index = initialHour * 2
-    
+
             if (finalMinutes >= 30) event.height = ((finalHour - initialHour) * 2 + 2) * heightColumn
             else event.height = ((finalHour - initialHour) * 2 + 1) * heightColumn
 
@@ -714,28 +727,28 @@ const mWeek = {
         for (let i = 0; i < 48; i++) {
             const hora = document.createElement('div')
             hora.classList.add('w-area', 'w-number-hour')
-        
+
             const hours = Math.floor(i / 2)
             const minutes = i % 2 === 0 ? 0 : 30
-        
+
             const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
             hora.innerHTML = formattedTime
-        
+
             divHours.appendChild(hora)
             const line = []
-        
+
             for (let j = 0; j < 7; j++) {
                 const area = document.createElement('div')
                 area.classList.add('w-area', 'w-hour')
-        
+
                 area.hours = hours
                 area.minutes = minutes
-        
+
                 area.day = mWeek.currentWeek[j].day
                 area.month = mWeek.currentWeek[j].month
                 area.year = calendar.year
                 area.date = new Date(calendar.year, mWeek.currentWeek[j].month, mWeek.currentWeek[j].day).setHours(hours, minutes)
-        
+
                 if (area.day == calendar.currentDay && area.month == calendar.currentMonth && area.year == calendar.currentYear) area.classList.add('w-today')
 
                 area.addEventListener('click', () => modal.open())
@@ -832,7 +845,7 @@ const mWeek = {
 
                 if (finalMinutes >= 30) event.height = (((finalHour - initialHour) * 2) + 2) * heightColumn
                 else event.height = (((finalHour - initialHour) * 2) + 1) * heightColumn
-        
+
                 const element = mWeek.createHtml(event)
                 mWeek.matrizHourDay[event.index][initialDate.getDay()].appendChild(element)
                 event.elements.push(element)
@@ -847,8 +860,8 @@ const mWeek = {
                 if (i == initialDay) {
 
                     if (initialMinutes >= 30) event.index = (initialHour * 2) + 1
-                    else event.index = initialHour * 2  
-                    
+                    else event.index = initialHour * 2
+
                     if (initialMinutes >= 30) event.height = (46 - initialHour) * heightColumn
                     else event.height = (48 - (initialHour * 2)) * heightColumn
 
@@ -946,6 +959,7 @@ const mMonth = {
     matrizDays: [],
     areas: 42,
     dates: {},
+    oldDate: null,
 
     nextDate() {
         calendar.month++
@@ -1014,75 +1028,81 @@ const mMonth = {
         for (let i = -calendar.getFirstDayOfWeek(); i < indexArea; i++) {
             const date = new Date(calendar.year, calendar.month, i)
 
-            const day = document.createElement('div')
-            day.classList.add('m-day')
-
-            day.day = date.getDate()
-            day.month = date.getMonth()
-            day.year = date.getFullYear()
-            day.date = date
-
-            day.innerHTML += `<div class='m-value-day'>${date.getDate()}</div>`
-
-            if (date.getFullYear() == calendar.currentYear &&
-                date.getMonth() == calendar.currentMonth &&
-                date.getDate() == calendar.currentDay) {
-                day.classList.add('m-today')
+            const day = {
+                element: document.createElement('div'),
+                day: date.getDate(),
+                month: date.getMonth(),
+                year: date.getFullYear(),
+                date: date,
+                change: false
             }
 
-            if (i < 1 || i > calendar.getLastDayThisMonth()) day.classList.add('disable')
+            day.element.classList.add('m-day')
+            day.element.innerHTML = `<div class="m-value-day">${date.getDate()}</div>`
+            day.element.hiddenChildren = []
+
+            if (date.getFullYear() === calendar.currentYear &&
+                date.getMonth() === calendar.currentMonth &&
+                date.getDate() === calendar.currentDay) {
+                day.element.classList.add('m-today')
+            }
+
+            if (i < 1 || i > calendar.getLastDayThisMonth()) {
+                day.element.classList.add('disable')
+            }
 
             line.push(day)
-            if (line.length == 7) {
+            if (line.length === 7) {
                 mMonth.matrizDays.push(line)
                 line = []
             }
 
-            day.addEventListener('dragenter', () => {
+            day.element.addEventListener('dragenter', () => {
                 if (day.change) {
                     mMonth.updatePosition(day)
                     day.change = false
                 }
             })
 
-            day.addEventListener('dragleave', () => day.change = true)
+            day.element.addEventListener('dragleave', () => day.change = true)
 
-            day.addEventListener('click', () => {
+            day.element.addEventListener('click', () => {
                 modal.updateDate({ day: day.day, month: day.month, year: day.year, mode: 'onlyDay' })
                 modal.open()
             })
 
-            day.addEventListener('mousedown', (e) => {
+            day.element.addEventListener('mousedown', (e) => {
                 if (!e.target.classList.contains('m-day')) return
                 calendar.selecting = true
                 mMonth.dates.initial = day.date
             })
 
-            day.addEventListener('mousemove', () => {
+            day.element.addEventListener('mousemove', () => {
                 if (!calendar.selecting) return
                 mMonth.dates.final = day.date
                 const D = mMonth.dates
                 mMonth.matrizDays.forEach(semana => {
                     semana.forEach(day => {
-                        day.classList.remove('selected')
+                        day.element.classList.remove('selected')
                         const isDayInRange = (day.date >= D.initial && day.date <= D.final) || (day.date <= D.initial && day.date >= D.final)
-                        if (isDayInRange) day.classList.add('selected')
+                        if (isDayInRange) day.element.classList.add('selected')
                     })
                 })
             })
 
-            day.addEventListener('mouseup', () => {
+            day.element.addEventListener('mouseup', () => {
                 calendar.selecting = false
-                mMonth.matrizDays.forEach(sem => sem.forEach(day => day.classList.remove('selected')))
+                mMonth.matrizDays.forEach(sem => sem.forEach(day => day.element.classList.remove('selected')))
                 modal.updateDate(mMonth.dates)
                 modal.open()
             })
 
-            containerDays.appendChild(day)
+            containerDays.appendChild(day.element)
         }
 
         return containerDays
     },
+
 
     render(events) {
         events.forEach(event => {
@@ -1102,7 +1122,7 @@ const mMonth = {
                 event.width = (7 - initialDate.getDay()) * widthEvent
                 const element = mMonth.createEvent(event)
                 event.elements.push(element)
-                mMonth.matrizDays[line][initialDate.getDay()].appendChild(element)
+                mMonth.matrizDays[line][initialDate.getDay()].element.appendChild(element)
                 daysLong = daysLong - (7 - initialDate.getDay())
                 let i = 1
 
@@ -1110,16 +1130,15 @@ const mMonth = {
                     event.width = 7 * widthEvent
                     const element2 = mMonth.createEvent(event)
                     event.elements.push(element2)
-                    mMonth.matrizDays[line + i][0].appendChild(element2)
+                    mMonth.matrizDays[line + i][0].element.appendChild(element2)
                     daysLong = daysLong - 7
                     i++
-
                 }
 
                 event.width = daysLong * widthEvent
                 const element3 = mMonth.createEvent(event)
                 event.elements.push(element3)
-                mMonth.matrizDays[line + i][0].appendChild(element3)
+                mMonth.matrizDays[line + i][0].element.appendChild(element3)
 
                 return
             }
@@ -1128,19 +1147,37 @@ const mMonth = {
             const element = mMonth.createEvent(event)
             event.elements.push(element)
 
-            mMonth.matrizDays[line][initialDate.getDay()].appendChild(element)
-            mMonth.agroupChildren(mMonth.matrizDays[line][initialDate.getDay()])
+            mMonth.matrizDays[line][initialDate.getDay()].element.appendChild(element)
+            mMonth.agroupChildren(mMonth.matrizDays[line][initialDate.getDay()].element)
         })
     },
 
-    agroupChildren(day){
-        if ( day.children.length > 2) return
+    agroupChildren(day) {
+        const oldSpanMore = day.querySelector(".m-span-more")
+        if (oldSpanMore) oldSpanMore.remove()
 
-        const array = [...day.children]
-        console.log(array)
+        day.hiddenChildren.forEach(day => day.classList.remove("hide"))
 
-        console.log("foi")
-    }, 
+        day.hiddenChildren = []
+
+        const limitChildren = 3
+        if (day.children.length <= limitChildren) return
+
+        const ignoreChildren = 2
+        const arrayChildren = [...day.children]
+        arrayChildren.forEach((children, i) => {
+            if (i < ignoreChildren) return
+            day.hiddenChildren.push(children)
+        })
+
+        day.hiddenChildren.forEach(day => day.classList.add("hide"))
+
+        const spanMore = document.createElement("span")
+        spanMore.innerText = `+${day.hiddenChildren.length} more`
+        spanMore.classList.add("m-span-more")
+
+        day.appendChild(spanMore)
+    },
 
     createEvent(event) {
         const container = document.createElement('div')
@@ -1175,10 +1212,18 @@ const mMonth = {
 
         container.addEventListener('dragstart', () => {
             calendar.eventDragged = event
+            mMonth.oldDate = event.initialDate
             container.classList.add('dragging')
         })
 
-        container.addEventListener('dragend', () => container.classList.remove('dragging'))
+        container.addEventListener('dragend', () => {
+            container.classList.remove('dragging')
+
+            console.log("awsdawd")
+            const initialDate = new Date(mMonth.oldDate)
+            const line = +(((initialDate.getDate() + calendar.getFirstDayOfWeek()) / 7).toString().slice(0, 1))
+            mMonth.agroupChildren(mMonth.matrizDays[line][initialDate.getDay()].element)
+        })
 
         return container
     },
