@@ -1,85 +1,72 @@
-import { Modal } from './modal.js'
+import { MODAL } from './MODAL.js'
 
-export class Calendar {
-    constructor() {
-        this.listMonths = ['', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
-        this.daysOfWeek = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sabado']
-        this.currentMonth = new Date().getMonth() + 1
-        this.currentYear = new Date().getFullYear()
-        this.currentDay = new Date().getDate()
-        this.month = new Date().getMonth() + 1
-        this.week
-        this.year = new Date().getFullYear()
-        this.day = new Date().getDate()
-        this.container = document.querySelector('.container-modes')
-        this.eventDragged
-        this.mode
-        this.modal
-        this.selecting
-        this.dayHtml = document.querySelector('#day')
-        this.weekHtml = document.querySelector('#week')
-        this.monthHtml = document.querySelector('#month')
-        this.yearHtml = document.querySelector('#year')
-        this.events = [
-            { id: 0, title: '1 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'trabalho', color: 'red' } },
-            { id: 1, title: '10 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'trabalho', color: 'gray' } },
-            { id: 2, title: '2 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'escola', color: 'orange' } },
-            // { id: 3, title: '3 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-18T05:25', finalDate: '2024-06-20T21:26', tag: { name: 'trabalho', color: 'green' } },
-            // { id: 5, title: '5 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-11T02:25', finalDate: '2024-06-21T21:26', tag: { name: 'trabalho', color: 'blue' } },
-            // { id: 6, title: '66666', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T02:25', finalDate: '2024-06-10T21:26', tag: { name: 'trabalho', color: 'blue' }, allDay: true },
-        ]
-    }
+export const CALENDAR = {
+    listMonths: ['', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    daysOfWeek: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sabado'],
+    currentMonth: new Date().getMonth() + 1,
+    currentYear: new Date().getFullYear(),
+    currentDay: new Date().getDate(),
+    month: new Date().getMonth() + 1,
+    week: null,
+    year: new Date().getFullYear(),
+    day: new Date().getDate(),
+    container: document.querySelector('.container-modes'),
+    mode: null,
+    eventDragged: null,
+    selecting: null,
+    dayHtml: document.querySelector('#day'),
+    weekHtml: document.querySelector('#week'),
+    monthHtml: document.querySelector('#month'),
+    yearHtml: document.querySelector('#year'),
+    events: [
+        { id: 0, title: '1 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'trabalho', color: 'red' } },
+        { id: 1, title: '10 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'trabalho', color: 'gray' } },
+        { id: 2, title: '2 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T01:00', finalDate: '2024-06-10T01:00', tag: { name: 'escola', color: 'orange' } },
+        { id: 3, title: '3 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-18T05:25', finalDate: '2024-06-20T21:26', tag: { name: 'trabalho', color: 'green' } },
+        { id: 5, title: '5 Lembrete', description: 'Sou um lembre muito importante.', initialDate: '2024-06-11T02:25', finalDate: '2024-06-21T21:26', tag: { name: 'trabalho', color: 'blue' } },
+        { id: 6, title: '66666', description: 'Sou um lembre muito importante.', initialDate: '2024-06-10T02:25', finalDate: '2024-06-10T21:26', tag: { name: 'trabalho', color: 'blue' }, allDay: true },
+    ],
 
     init() {
-        this.modal = new Modal()
-        console.log(this.modal)
+        CALENDAR.mode = MONTH
 
-        this.banana = 21134
-        document.querySelector('#addEvent').addEventListener('click', () => {
-            this.modal.open()
-        })
+        document.querySelector('#addEvent').addEventListener('click', () => MODAL.open())
+        document.querySelector('#today').addEventListener('click', () => CALENDAR.today())
         document.querySelector('#btnWeek').addEventListener('click', () => {
-            this.mode = new Week()
-            this.mode.init() 
+            CALENDAR.mode = WEEK
+            CALENDAR.mode.init()
         })
         document.querySelector('#btnOneDay').addEventListener('click', () => {
-            this.mode = new Day()
-            this.mode.init()
+            CALENDAR.mode = DAY
+            CALENDAR.mode.init()
+
         })
         document.querySelector('#btnList').addEventListener('click', () => {
-            this.mode = new List()
-            this.mode.init()
+            CALENDAR.mode = LIST
+            CALENDAR.mode.init()
+
         })
         document.querySelector('#btnMonth').addEventListener('click', () => {
-            this.mode = new Month()
-            this.mode.init()
+            CALENDAR.mode = MONTH
+            CALENDAR.mode.init()
         })
-        document.querySelector('#btnBackMonth').addEventListener('click', () => {
-            this.mode.previusDate()
-        })
-        document.querySelector('#btnNextMonth').addEventListener('click', () => {
-            this.mode.nextDate()
-        })
-        document.querySelector('#today').addEventListener('click', () => {
-            this.today()
-        })
+        document.querySelector('#btnBackMonth').addEventListener('click', () => CALENDAR.mode.previousDate())
+        document.querySelector('#btnNextMonth').addEventListener('click', () => CALENDAR.mode.nextDate())
 
-        this.mode = new Month()
-        this.mode.init()
-
-        this.updateDates()
-    }
+        CALENDAR.mode.init()
+        CALENDAR.updateDates()
+    },
 
     today() {
-        this.month = this.currentMonth
-        this.year = this.currentYear
-        this.day = this.currentDay
-        this.mode.init()
-        this.updateDates()
-    }
+        CALENDAR.month = CALENDAR.currentMonth
+        CALENDAR.year = CALENDAR.currentYear
+        CALENDAR.day = CALENDAR.currentDay
+        CALENDAR.mode.init()
+        CALENDAR.updateDates()
+    },
 
     validEvent() {
-        const fields = [...this.modal.form]
+        const fields = [...MODAL.form]
         const emptyField = fields.find(field => field.value == '')
         if (emptyField) {
             const fieldErro = document.querySelector('#error-mensage')
@@ -88,151 +75,149 @@ export class Calendar {
             return false
         }
         return true
-    }
+    },
 
     addEvent() {
-        if (!this.validEvent()) return
+        if (!CALENDAR.validEvent()) return
 
         const event = {
-            id: this.events.length + 1,
-            title: this.modal.form.title.value,
-            description: this.modal.form.description.value,
-            initialDate: this.modal.form.initialDate.value,
-            finalDate: this.modal.form.finalDate.value,
-            tag: this.modal.inputTag,
-            allDay: this.modal.form.allDay.checked
+            id: CALENDAR.events.length + 1,
+            title: MODAL.form.title.value,
+            description: MODAL.form.description.value,
+            initialDate: MODAL.form.initialDate.value,
+            finalDate: MODAL.form.finalDate.value,
+            tag: MODAL.inputTag,
+            allDay: MODAL.form.allDay.checked
         }
 
         // isso vai ser um fetch
-        this.events.push(event)
+        CALENDAR.events.push(event)
 
-        if (this.mode.mode == 'list') this.mode.init()
-        else this.mode.render([event])
+        if (CALENDAR.mode.name = 'list') CALENDAR.mode.init()
+        else CALENDAR.mode.render([event])
 
-        this.modal.close()
-    }
+        MODAL.close()
+    },
 
     updateEvent(event) {
-        if (!this.validEvent()) return
+        if (!CALENDAR.validEvent()) return
 
         event.elements.forEach(e => e.remove())
+        event.title = MODAL.form.title.value
+        event.description = MODAL.form.description.value
+        event.initialDate = MODAL.form.initialDate.value
+        event.finalDate = MODAL.form.finalDate.value
+        event.tag = MODAL.inputTag
+        event.allDay = MODAL.form.allDay.checked
 
-        event.title = this.modal.form.title.value
-        event.description = this.modal.form.description.value
-        event.initialDate = this.modal.form.initialDate.value
-        event.finalDate = this.modal.form.finalDate.value
-        event.tag = this.modal.inputTag
-        event.allDay = this.modal.form.allDay.checked
+        if (MODAL.form.allDay.checked) event.finalDate = MODAL.form.initialDate.value
 
-        if (this.modal.form.allDay.checked) event.finalDate = this.modal.form.initialDate.value
+        if (CALENDAR.mode.name = 'list') CALENDAR.mode.init()
+        else CALENDAR.mode.render([event])
 
-        if (this.mode.mode == 'list') this.mode.init()
-        else this.mode.render([event])
-    
-        if (this.mode.mode == 'month') {
+        if (CALENDAR.mode.name == 'month') {
             const initialDate = new Date(event.initialDate)
-            const line = +(((initialDate.getDate() + this.getFirstDayOfWeek()) / 7).toString().slice(0, 1))
-            this.agroupChildren(this.classMonth.matrizDays[line][initialDate.getDay()].element)
+            MONTH.joinEvents(MONTH.matrixDays[CALENDAR.getLineOfWeek(initialDate.getDate())][initialDate.getDay()].element)
         }
-    }
+    },
 
     removeEvent(event) {
         event.elements.forEach(e => e.remove())
-        if (this.mode.mode == 'list') this.classlist.init()
+        if (CALENDAR.mode === 'list') LIST.init()
 
-        if (this.mode.mode == 'month') {
+        if (CALENDAR.mode === 'month') {
             const initialDate = new Date(event.initialDate)
-            const line = +(((initialDate.getDate() + this.getFirstDayOfWeek()) / 7).toString().slice(0, 1))
-            this.agroupChildren(this.classMonth.matrizDays[line][initialDate.getDay()].element)
+            MONTH.joinEvents(MONTH.matrixDays[CALENDAR.getLineOfWeek(initialDate.getDate())][initialDate.getDay()].element)
         }
 
         // isso vai ser um fetch
-        this.events = this.events.filter(e => e.id != event.id)
-    }
+        CALENDAR.events = CALENDAR.events.filter(e => e.id != event.id)
+    },
 
     formatDate(date) {
         return `${new Date(date).getFullYear()}-${(new Date(date).getMonth()).toString().padStart(2, '0')}-${new Date(date).getDate().toString().padStart(2, '0')}T${new Date(date).getHours().toString().padStart(2, '0')}:${new Date(date).getMinutes().toString().padStart(2, '0')}`
-    }
+    },
 
     getLastDayThisMonth() {
-        return new Date(this.year, this.month, 0).getDate()
-    }
+        return new Date(CALENDAR.year, CALENDAR.month, 0).getDate()
+    },
 
     getFirstDayOfWeek() {
-        return new Date(this.year, this.month - 1, 1).getDay() - 1
-    }
+        return new Date(CALENDAR.year, CALENDAR.month - 1, 1).getDay() - 1
+    },
+
+    getLineOfWeek(date) {
+        return Math.floor((date + this.getFirstDayOfWeek()) / 7)
+    },
 
     orderDates(event) {
         if (new Date(event.initialDate) > new Date(event.finalDate)) {
             [event.initialDate, event.finalDate] = [event.finalDate, event.initialDate]
         }
-    }
+    },
 
     updateDates() {
-        this.dayHtml.innerHTML = this.day.toString().padStart(2, '0')
-        this.weekHtml.innerHTML = this.week
-        this.monthHtml.innerHTML = this.listMonths[this.month]
-        this.yearHtml.innerHTML = this.year
-    }
+        CALENDAR.dayHtml.innerHTML = CALENDAR.day.toString().padStart(2, '0')
+        CALENDAR.weekHtml.innerHTML = CALENDAR.week
+        CALENDAR.monthHtml.innerHTML = CALENDAR.listMonths[CALENDAR.month]
+        CALENDAR.yearHtml.innerHTML = CALENDAR.year
+    },
 }
 
-class Month extends Calendar {
-    constructor() {
-        super()
-        this.matrizDays = []
-        this.areas = 42
-        this.dates = {}
-        this.oldDate = null
-    }
+const MONTH = {
+    name: 'month',
+    matrixDays: [],
+    totalDays: 42,
+    dates: {},
+    oldDate: null,
 
     nextDate() {
-        this.month++
-        if (this.month > 12) {
-            this.month = 1
-            this.year++
+        CALENDAR.month++
+        if (CALENDAR.month > 12) {
+            CALENDAR.month = 1
+            CALENDAR.year++
         }
 
-        this.init()
-        this.updateDates()
-    }
+        MONTH.init()
+        CALENDAR.updateDates()
+    },
 
-    previusDate() {
-        this.month--
-        if (this.month < 1) {
-            this.month = 12
-            this.year--
+    previousDate() {
+        CALENDAR.month--
+        if (CALENDAR.month < 1) {
+            CALENDAR.month = 12
+            CALENDAR.year--
         }
 
-        this.init()
-        this.updateDates()
-    }
+        MONTH.init()
+        CALENDAR.updateDates()
+    },
 
     init() {
-        this.mode = 'month'
-        this.container.innerHTML = ''
+        CALENDAR.container.innerHTML = ''
 
-        this.dayHtml.classList.add('hide')
-        this.weekHtml.classList.add('hide')
-        this.monthHtml.classList.remove('hide')
+        CALENDAR.dayHtml.classList.add('hide')
+        CALENDAR.weekHtml.classList.add('hide')
+        CALENDAR.monthHtml.classList.remove('hide')
 
-        this.matrizDays = []
+        MONTH.matrixDays = []
 
         const container = document.createElement('div')
         container.classList.add('m-container-month')
 
-        container.appendChild(this.createWeek())
-        container.appendChild(this.createDays())
+        container.appendChild(MONTH.createWeek())
+        container.appendChild(MONTH.createDays())
 
-        this.container.appendChild(container)
-        this.resize()
-        this.render(this.events)
-    }
+        CALENDAR.container.appendChild(container)
+        MONTH.resize()
+        MONTH.render(CALENDAR.events)
+    },
 
     createWeek() {
         const container = document.createElement('div')
         container.classList.add('m-weeks')
 
-        this.daysOfWeek.forEach(d => {
+        CALENDAR.daysOfWeek.forEach(d => {
             const day = document.createElement('div')
             day.innerHTML = d.slice(0, 3)
             day.classList.add('m-day-week')
@@ -240,17 +225,17 @@ class Month extends Calendar {
         })
 
         return container
-    }
+    },
 
     createDays() {
         const containerDays = document.createElement('div')
         containerDays.classList.add('m-container-days')
 
-        const indexArea = this.areas - this.getFirstDayOfWeek()
+        const indexArea = MONTH.totalDays - CALENDAR.getFirstDayOfWeek()
         let line = []
 
-        for (let i = -this.getFirstDayOfWeek(); i < indexArea; i++) {
-            const date = new Date(this.year, this.month, i)
+        for (let i = -CALENDAR.getFirstDayOfWeek(); i < indexArea; i++) {
+            const date = new Date(CALENDAR.year, CALENDAR.month, i)
 
             const day = {
                 element: document.createElement('div'),
@@ -265,25 +250,25 @@ class Month extends Calendar {
             day.element.innerHTML = `<div class="m-value-day">${date.getDate()}</div>`
             day.element.hiddenChildren = []
 
-            if (date.getFullYear() === this.currentYear &&
-                date.getMonth() === this.currentMonth &&
-                date.getDate() === this.currentDay) {
+            if (date.getFullYear() === CALENDAR.currentYear &&
+                date.getMonth() === CALENDAR.currentMonth &&
+                date.getDate() === CALENDAR.currentDay) {
                 day.element.classList.add('m-today')
             }
 
-            if (i < 1 || i > this.getLastDayThisMonth()) {
+            if (i < 1 || i > CALENDAR.getLastDayThisMonth()) {
                 day.element.classList.add('disable')
             }
 
             line.push(day)
             if (line.length === 7) {
-                this.matrizDays.push(line)
+                MONTH.matrixDays.push(line)
                 line = []
             }
 
             day.element.addEventListener('dragenter', () => {
                 if (day.change) {
-                    this.updatePosition(day)
+                    MONTH.updatePosition(day)
                     day.change = false
                 }
             })
@@ -291,21 +276,21 @@ class Month extends Calendar {
             day.element.addEventListener('dragleave', () => day.change = true)
 
             day.element.addEventListener('click', () => {
-                this.modal.updateDate({ day: day.day, month: day.month, year: day.year, mode: 'onlyDay' })
-                this.modal.open()
+                MODAL.updateDate({ day: day.day, month: day.month, year: day.year, mode: 'onlyDay' })
+                MODAL.open()
             })
 
             day.element.addEventListener('mousedown', (e) => {
                 if (!e.target.classList.contains('m-day')) return
-                this.selecting = true
-                this.dates.initial = day.date
+                CALENDAR.selecting = true
+                MONTH.dates.initial = day.date
             })
 
             day.element.addEventListener('mousemove', () => {
-                if (!this.selecting) return
-                this.dates.final = day.date
-                const D = this.dates
-                this.matrizDays.forEach(semana => {
+                if (!CALENDAR.selecting) return
+                MONTH.dates.final = day.date
+                const D = MONTH.dates
+                MONTH.matrixDays.forEach(semana => {
                     semana.forEach(day => {
                         day.element.classList.remove('selected')
                         const isDayInRange = (day.date >= D.initial && day.date <= D.final) || (day.date <= D.initial && day.date >= D.final)
@@ -315,68 +300,67 @@ class Month extends Calendar {
             })
 
             day.element.addEventListener('mouseup', () => {
-                this.selecting = false
-                this.matrizDays.forEach(sem => sem.forEach(day => day.element.classList.remove('selected')))
-                this.modal.updateDate(this.dates)
-                this.modal.open()
+                CALENDAR.selecting = false
+                MONTH.matrixDays.forEach(sem => sem.forEach(day => day.element.classList.remove('selected')))
+                MODAL.updateDate(MONTH.dates)
+                MODAL.open()
             })
 
             containerDays.appendChild(day.element)
         }
 
         return containerDays
-    }
-
+    },
 
     render(events) {
         events.forEach(event => {
             const initialDate = new Date(event.initialDate)
             const finalDate = new Date(event.finalDate)
-            const line = +(((initialDate.getDate() + this.getFirstDayOfWeek()) / 7).toString().slice(0, 1))
+            const line = CALENDAR.getLineOfWeek(initialDate.getDate())
 
             const widthEvent = document.querySelector('.m-day').clientWidth
 
             let daysLong = finalDate.getDate() - initialDate.getDate() + 1
 
-            if (initialDate.getMonth() + 1 !== this.month || initialDate.getFullYear() !== this.year) return
+            if (initialDate.getMonth() + 1 !== CALENDAR.month || initialDate.getFullYear() !== CALENDAR.year) return
 
             event.elements = []
 
             if ((initialDate.getDay() + daysLong) > 7) {
                 event.width = (7 - initialDate.getDay()) * widthEvent
-                const element = this.createEvent(event)
+                const element = MONTH.createEvent(event)
                 event.elements.push(element)
-                this.matrizDays[line][initialDate.getDay()].element.appendChild(element)
+                MONTH.matrixDays[line][initialDate.getDay()].element.appendChild(element)
                 daysLong = daysLong - (7 - initialDate.getDay())
                 let i = 1
 
                 while (daysLong > 7) {
                     event.width = 7 * widthEvent
-                    const element2 = this.createEvent(event)
+                    const element2 = MONTH.createEvent(event)
                     event.elements.push(element2)
-                    this.matrizDays[line + i][0].element.appendChild(element2)
+                    MONTH.matrixDays[line + i][0].element.appendChild(element2)
                     daysLong = daysLong - 7
                     i++
                 }
 
                 event.width = daysLong * widthEvent
-                const element3 = this.createEvent(event)
+                const element3 = MONTH.createEvent(event)
                 event.elements.push(element3)
-                this.matrizDays[line + i][0].element.appendChild(element3)
+                MONTH.matrixDays[line + i][0].element.appendChild(element3)
 
                 return
             }
 
             event.width = daysLong * widthEvent
-            const element = this.createEvent(event)
+            const element = MONTH.createEvent(event)
             event.elements.push(element)
 
-            this.matrizDays[line][initialDate.getDay()].element.appendChild(element)
-            this.agroupChildren(this.matrizDays[line][initialDate.getDay()].element)
+            MONTH.matrixDays[line][initialDate.getDay()].element.appendChild(element)
+            MONTH.joinEvents(MONTH.matrixDays[line][initialDate.getDay()].element)
         })
-    }
+    },
 
-    agroupChildren(day) {
+    joinEvents(day) {
         const oldSpanMore = day.querySelector(".m-span-more")
         if (oldSpanMore) oldSpanMore.remove()
 
@@ -399,9 +383,14 @@ class Month extends Calendar {
         const spanMore = document.createElement("span")
         spanMore.innerText = `+${day.hiddenChildren.length} more`
         spanMore.classList.add("m-span-more")
+        spanMore.addEventListener("click", () => {
+            MODAL.open(MODAL.elementEvents)
+            MODAL.showEvent(day.hiddenChildren)
+            setInterval(() => MODAL.close(), 1)
+        })
 
         day.appendChild(spanMore)
-    }
+    },
 
     createEvent(event) {
         const container = document.createElement('div')
@@ -410,131 +399,125 @@ class Month extends Calendar {
         container.draggable = 'true'
         container.style.width = `${event.width}px`
 
-        const arrastaMenos = document.createElement('div')
-        arrastaMenos.innerHTML = '|'
-        arrastaMenos.addEventListener('mousedown', () => event.action = 'arrastaMenos')
-        arrastaMenos.classList.add('m-tip')
+        const resizeLeft = document.createElement('div')
+        resizeLeft.innerHTML = '|'
+        resizeLeft.addEventListener('mousedown', () => event.action = 'resizeLeft')
+        resizeLeft.classList.add('m-tip')
 
         const evento = document.createElement('div')
         evento.innerHTML = event.title
         evento.classList.add('m-event-value')
-        evento.addEventListener('mousedown', () => event.action = 'arrastaTudo')
+        evento.addEventListener('mousedown', () => event.action = 'resizeAll')
 
-        const arrastaMais = document.createElement('div')
-        arrastaMais.innerHTML = '|'
-        arrastaMais.addEventListener('mousedown', () => event.action = 'arrastaMais')
-        arrastaMais.classList.add('m-tip')
+        const resizeRight = document.createElement('div')
+        resizeRight.innerHTML = '|'
+        resizeRight.addEventListener('mousedown', () => event.action = 'resizeRight')
+        resizeRight.classList.add('m-tip')
 
-        container.appendChild(arrastaMenos)
+        container.appendChild(resizeLeft)
         container.appendChild(evento)
-        container.appendChild(arrastaMais)
+        container.appendChild(resizeRight)
 
         container.addEventListener('click', () => {
-            this.modal.open()
-            this.modal.renderEvent(event)
+            MODAL.open()
+            MODAL.renderEvent(event)
         })
 
         container.addEventListener('dragstart', () => {
-            this.eventDragged = event
-            this.oldDate = event.initialDate
+            CALENDAR.eventDragged = event
+            MONTH.oldDate = event.initialDate
             container.classList.add('dragging')
         })
 
         container.addEventListener('dragend', () => {
             container.classList.remove('dragging')
-
-            const initialDate = new Date(this.oldDate)
-            const line = +(((initialDate.getDate() + this.getFirstDayOfWeek()) / 7).toString().slice(0, 1))
-            this.agroupChildren(this.matrizDays[line][initialDate.getDay()].element)
+            const initialDate = new Date(MONTH.oldDate)
+            MONTH.joinEvents(MONTH.matrixDays[CALENDAR.getLineOfWeek(initialDate.getDate())][initialDate.getDay()].element)
         })
 
         return container
-    }
+    },
 
     updatePosition(date) {
-        const eventDragged = this.eventDragged
+        const eventDragged = CALENDAR.eventDragged
         if (!eventDragged) return
 
-        if (eventDragged.action == 'arrastaMenos') {
-            eventDragged.initialDate = this.formatDate(new Date(this.year, date.month, date.day))
+        if (eventDragged.action == 'resizeLeft') {
+            eventDragged.initialDate = CALENDAR.formatDate(new Date(CALENDAR.year, date.month, date.day))
         }
 
-        if (eventDragged.action == 'arrastaTudo') {
+        if (eventDragged.action == 'resizeAll') {
             const initialDate = new Date(eventDragged.initialDate)
             const finalDate = new Date(eventDragged.finalDate)
             const duration = finalDate.getDate() - initialDate.getDate()
 
-            const newDate = new Date(this.year, date.month, date.day)
-            eventDragged.initialDate = this.formatDate(newDate)
-            eventDragged.finalDate = this.formatDate(new Date(newDate.setDate(newDate.getDate() + duration)))
+            const newDate = new Date(CALENDAR.year, date.month, date.day)
+            eventDragged.initialDate = CALENDAR.formatDate(newDate)
+            eventDragged.finalDate = CALENDAR.formatDate(new Date(newDate.setDate(newDate.getDate() + duration)))
         }
 
-        if (eventDragged.action == 'arrastaMais') {
-            eventDragged.finalDate = this.formatDate(new Date(this.year, date.month, date.day))
+        if (eventDragged.action == 'resizeRight') {
+            eventDragged.finalDate = CALENDAR.formatDate(new Date(CALENDAR.year, date.month, date.day))
         }
 
-        this.orderDates(eventDragged)
+        CALENDAR.orderDates(eventDragged)
 
         eventDragged.elements.forEach(e => e.remove())
-        this.render([eventDragged])
-    }
+        MONTH.render([eventDragged])
+    },
 
     resize() {
         window.addEventListener('resize', () => {
-            this.events.forEach(e => e.elements.forEach(event => event.remove()))
-            this.render(this.events)
+            CALENDAR.events.forEach(e => e.elements.forEach(event => event.remove()))
+            MONTH.render(CALENDAR.events)
         })
-    }
+    },
 }
 
-class Week extends Calendar {
-    constructor() {
-        super()
-        this.matrizWeek = []
-        this.matrizHourDay = []
-        this.currentWeek = null
-        this.allDayDays = []
-        this.objDateDay = {}
-        this.objDateWeek = { mode: 'gridWeek' }   
-    }
+const WEEK = {
+    matrixWeek: [],
+    matrixHourDay: [],
+    currentWeek: null,
+    allDayDays: [],
+    objDateDay: {},
+    objDateWeek: { mode: 'gridWeek' },
 
     nextDate() {
-        this.day = this.day + 7
+        CALENDAR.day = CALENDAR.day + 7
 
-        if (this.day > this.getLastDayThisMonth()) {
-            this.day = 1
-            this.month++
+        if (CALENDAR.day > CALENDAR.getLastDayThisMonth()) {
+            CALENDAR.day = 1
+            CALENDAR.month++
 
-            if (this.month > 12) {
-                this.month = 1
-                this.year++
+            if (CALENDAR.month > 12) {
+                CALENDAR.month = 1
+                CALENDAR.year++
+            }
+        }
+        WEEK.init()
+    },
+
+    previousDate() {
+        CALENDAR.day = CALENDAR.day - 7
+
+        if (CALENDAR.day < 1) {
+            CALENDAR.month--
+            CALENDAR.day = new Date(CALENDAR.year, CALENDAR.month + 1, 0).getDate()
+
+            if (CALENDAR.month < 1) {
+                CALENDAR.month = 12
+                CALENDAR.year--
             }
         }
 
-        this.init()
-    }
-
-    previusDate() {
-        this.day = this.day - 7
-
-        if (this.day < 1) {
-            this.month--
-            this.day = new Date(this.year, this.month + 1, 0).getDate()
-
-            if (this.month < 1) {
-                this.month = 12
-                this.year--
-            }
-        }
-
-        this.init()
-    }
+        WEEK.init()
+    },
 
     changeWeek() {
         let line = []
 
-        for (let i = -this.getFirstDayOfWeek(); i < 42 - this.getFirstDayOfWeek(); i++) {
-            const date = new Date(this.year, this.month, i)
+        for (let i = -CALENDAR.getFirstDayOfWeek(); i < 42 - CALENDAR.getFirstDayOfWeek(); i++) {
+            const date = new Date(CALENDAR.year, CALENDAR.month, i)
 
             const day = {}
             day.day = date.getDate()
@@ -542,46 +525,45 @@ class Week extends Calendar {
 
             line.push(day)
             if (line.length == 7) {
-                this.matrizWeek.push(line)
+                WEEK.matrixWeek.push(line)
                 line = []
             }
         }
 
-        const lines = +(((this.day + this.getFirstDayOfWeek()) / 7).toString().slice(0, 1))
-        const initialDate = this.matrizWeek[lines][0]
-        const finalDate = this.matrizWeek[lines][6]
+        const lines = CALENDAR.getLineOfWeek(CALENDAR.day)
+        const initialDate = WEEK.matrixWeek[lines][0]
+        const finalDate = WEEK.matrixWeek[lines][6]
 
-        const date = `${initialDate.day.toString().padStart(2, '0')} ${this.listMonths[initialDate.month]} - ${finalDate.day.toString().padStart(2, '0')} ${this.listMonths[finalDate.month]}`
-        this.currentWeek = this.matrizWeek[lines]
+        const date = `${initialDate.day.toString().padStart(2, '0')} ${CALENDAR.listMonths[initialDate.month]} - ${finalDate.day.toString().padStart(2, '0')} ${CALENDAR.listMonths[finalDate.month]}`
+        WEEK.currentWeek = WEEK.matrixWeek[lines]
 
-        this.week = date
-        this.updateDates()
-    }
+        CALENDAR.week = date
+        CALENDAR.updateDates()
+    },
 
     init() {
-        this.mode = 'week'
-        this.container.innerHTML = ''
+        CALENDAR.container.innerHTML = ''
 
-        this.dayHtml.classList.add('hide')
-        this.weekHtml.classList.remove('hide')
-        this.monthHtml.classList.add('hide')
+        CALENDAR.dayHtml.classList.add('hide')
+        CALENDAR.weekHtml.classList.remove('hide')
+        CALENDAR.monthHtml.classList.add('hide')
 
-        this.matrizHourDay = []
-        this.matrizWeek = []
+        WEEK.matrixHourDay = []
+        WEEK.matrixWeek = []
 
         const container = document.createElement('div')
         container.classList.add('w-container-week')
 
-        this.changeWeek()
+        WEEK.changeWeek()
 
-        container.appendChild(this.divWeek())
-        container.appendChild(this.divAllDay())
-        container.appendChild(this.divHours())
+        container.appendChild(WEEK.divWeek())
+        container.appendChild(WEEK.divAllDay())
+        container.appendChild(WEEK.divHours())
 
-        this.container.appendChild(container)
+        CALENDAR.container.appendChild(container)
 
-        this.render(this.events)
-    }
+        WEEK.render(CALENDAR.events)
+    },
 
     divWeek() {
         const divWeek = document.createElement('div')
@@ -591,15 +573,15 @@ class Week extends Calendar {
         firstChild.classList.add('w-day-week')
         divWeek.appendChild(firstChild)
 
-        this.daysOfWeek.forEach((day, i) => {
+        CALENDAR.daysOfWeek.forEach((day, i) => {
             const child = document.createElement('div')
-            child.innerHTML += `${day.slice(0, 3)} ${this.currentWeek[i].day.toString().padStart(2, '0')}/${this.currentWeek[i].month.toString().padStart(2, '0')}`
+            child.innerHTML += `${day.slice(0, 3)} ${WEEK.currentWeek[i].day.toString().padStart(2, '0')}/${WEEK.currentWeek[i].month.toString().padStart(2, '0')}`
             child.classList.add('w-day-week')
             divWeek.appendChild(child)
         })
 
         return divWeek
-    }
+    },
 
     divAllDay() {
         const divAllDay = document.createElement('div')
@@ -614,33 +596,33 @@ class Week extends Calendar {
             const day = document.createElement('div')
             day.classList.add('w-area', 'w-all-day')
 
-            day.day = this.currentWeek[i].day
-            day.month = this.currentWeek[i].month
-            day.year = this.year
+            day.day = WEEK.currentWeek[i].day
+            day.month = WEEK.currentWeek[i].month
+            day.year = CALENDAR.year
             day.date = new Date(day.year, day.month, day.day)
 
-            if (day.day == this.currentDay && day.month == this.currentMonth && day.year == this.currentYear) day.classList.add('w-today')
+            if (day.day == CALENDAR.currentDay && day.month == CALENDAR.currentMonth && day.year == CALENDAR.currentYear) day.classList.add('w-today')
 
-            this.allDayDays.push(day)
+            WEEK.allDayDays.push(day)
 
-            day.addEventListener('dragenter', () => this.updatePosition({ day: this.formatDate(new Date(day.year, day.month, day.day)) }))
+            day.addEventListener('dragenter', () => WEEK.updatePosition({ day: CALENDAR.formatDate(new Date(day.year, day.month, day.day)) }))
 
             day.addEventListener('click', () => {
-                this.modal.updateDate({ day: day.day, month: day.month, year: day.year, mode: 'onlyDay' })
-                this.modal.open()
+                MODAL.updateDate({ day: day.day, month: day.month, year: day.year, mode: 'onlyDay' })
+                MODAL.open()
             })
 
             day.addEventListener('mousedown', (e) => {
                 if (!e.target.classList.contains('w-all-day')) return
-                this.selecting = true
-                this.objDateDay.initial = day.date
+                CALENDAR.selecting = true
+                WEEK.objDateDay.initial = day.date
             })
 
             day.addEventListener('mousemove', () => {
-                if (!this.selecting) return
-                this.objDateDay.final = day.date
-                const D = this.objDateDay
-                this.allDayDays.forEach(day => {
+                if (!CALENDAR.selecting) return
+                WEEK.objDateDay.final = day.date
+                const D = WEEK.objDateDay
+                WEEK.allDayDays.forEach(day => {
                     day.classList.remove('selected')
                     const isDayInRange = (day.date >= D.initial && day.date <= D.final) || (day.date <= D.initial && day.date >= D.final)
                     if (isDayInRange) day.classList.add('selected')
@@ -648,17 +630,17 @@ class Week extends Calendar {
             })
 
             day.addEventListener('mouseup', () => {
-                this.selecting = false
-                this.allDayDays.forEach(day => day.classList.remove('selected'))
-                this.modal.open()
-                this.modal.updateDate(this.objDateDay)
+                CALENDAR.selecting = false
+                WEEK.allDayDays.forEach(day => day.classList.remove('selected'))
+                MODAL.open()
+                MODAL.updateDate(WEEK.objDateDay)
             })
 
             divAllDay.appendChild(day)
         }
 
         return divAllDay
-    }
+    },
 
     divHours() {
         const divHours = document.createElement('div')
@@ -684,20 +666,20 @@ class Week extends Calendar {
                 area.hours = hours
                 area.minutes = minutes
 
-                area.day = this.currentWeek[j].day
-                area.month = this.currentWeek[j].month
-                area.year = this.year
-                area.date = new Date(this.year, this.currentWeek[j].month, this.currentWeek[j].day).setHours(hours, minutes)
+                area.day = WEEK.currentWeek[j].day
+                area.month = WEEK.currentWeek[j].month
+                area.year = CALENDAR.year
+                area.date = new Date(CALENDAR.year, WEEK.currentWeek[j].month, WEEK.currentWeek[j].day).setHours(hours, minutes)
 
-                if (area.day == this.currentDay && area.month == this.currentMonth && area.year == this.currentYear) area.classList.add('w-today')
+                if (area.day == CALENDAR.currentDay && area.month == CALENDAR.currentMonth && area.year == CALENDAR.currentYear) area.classList.add('w-today')
 
-                area.addEventListener('click', () => this.modal.open())
+                area.addEventListener('click', () => MODAL.open())
 
                 area.addEventListener('dragenter', () => {
                     if (area.change) {
-                        this.updatePosition({
-                            dataHour: this.formatDate(new Date(new Date(area.date).setHours(hours, minutes))),
-                            day: this.formatDate(new Date(area.date)),
+                        WEEK.updatePosition({
+                            dataHour: CALENDAR.formatDate(new Date(new Date(area.date).setHours(hours, minutes))),
+                            day: CALENDAR.formatDate(new Date(area.date)),
                         })
                         area.change = false
                     }
@@ -707,18 +689,18 @@ class Week extends Calendar {
 
                 area.addEventListener('mousedown', (e) => {
                     if (!e.target.classList.contains('w-hour')) return
-                    this.selecting = true
-                    this.objDateWeek.initial = area.date
+                    CALENDAR.selecting = true
+                    WEEK.objDateWeek.initial = area.date
                 })
 
                 area.addEventListener('mousemove', () => {
-                    if (!this.selecting) return
-                    this.objDateWeek.final = area.date
+                    if (!CALENDAR.selecting) return
+                    WEEK.objDateWeek.final = area.date
 
-                    this.matrizHourDay.forEach(line => {
+                    WEEK.matrixHourDay.forEach(line => {
                         line.forEach(hour => {
-                            if (hour.date <= this.objDateWeek.initial && hour.date >= this.objDateWeek.final ||
-                                hour.date >= this.objDateWeek.initial && hour.date <= this.objDateWeek.final) {
+                            if (hour.date <= WEEK.objDateWeek.initial && hour.date >= WEEK.objDateWeek.final ||
+                                hour.date >= WEEK.objDateWeek.initial && hour.date <= WEEK.objDateWeek.final) {
                                 hour.classList.add('selected')
                             } else {
                                 hour.classList.remove('selected')
@@ -728,32 +710,32 @@ class Week extends Calendar {
                 })
 
                 area.addEventListener('mouseup', () => {
-                    this.selecting = false
-                    this.matrizHourDay.forEach(line => line.forEach(hour => hour.classList.remove('selected')))
-                    this.modal.updateDate(this.objDateWeek)
-                    this.modal.open()
+                    CALENDAR.selecting = false
+                    WEEK.matrixHourDay.forEach(line => line.forEach(hour => hour.classList.remove('selected')))
+                    MODAL.updateDate(WEEK.objDateWeek)
+                    MODAL.open()
                 })
 
                 line.push(area)
                 divHours.appendChild(area)
             }
-            this.matrizHourDay.push(line)
+            WEEK.matrixHourDay.push(line)
         }
 
         return divHours
-    }
+    },
 
     render(event) {
         event.forEach(event => {
             const initialDate = new Date(event.initialDate)
 
-            const diaInicialDaSemana = this.currentWeek[0].day
-            const diaFinalDaSemana = this.currentWeek[6].day
+            const diaInicialDaSemana = WEEK.currentWeek[0].day
+            const diaFinalDaSemana = WEEK.currentWeek[6].day
 
             if (initialDate.getDate() < diaInicialDaSemana ||
                 initialDate.getDate() > diaFinalDaSemana ||
-                initialDate.getMonth() + 1 !== this.month ||
-                initialDate.getFullYear() !== this.year) return
+                initialDate.getMonth() + 1 !== CALENDAR.month ||
+                initialDate.getFullYear() !== CALENDAR.year) return
 
             const initialDay = new Date(event.initialDate).getDate()
             const finalDay = new Date(event.finalDate).getDate()
@@ -771,9 +753,9 @@ class Week extends Calendar {
 
             if (event.allDay) {
                 event.height = heightColumn * 2
-                const element = this.createHtml(event)
-                const areasDay = document.querySelectorAll('.w-all-day')
-                areasDay[initialDate.getDay()].appendChild(element)
+                const element = WEEK.createHtml(event)
+                const totalDaysDay = document.querySelectorAll('.w-all-day')
+                totalDaysDay[initialDate.getDay()].appendChild(element)
                 event.elements.push(element)
                 return
             }
@@ -786,8 +768,8 @@ class Week extends Calendar {
                 if (finalMinutes >= 30) event.height = (((finalHour - initialHour) * 2) + 2) * heightColumn
                 else event.height = (((finalHour - initialHour) * 2) + 1) * heightColumn
 
-                const element = this.createHtml(event)
-                this.matrizHourDay[event.index][initialDate.getDay()].appendChild(element)
+                const element = WEEK.createHtml(event)
+                WEEK.matrixHourDay[event.index][initialDate.getDay()].appendChild(element)
                 event.elements.push(element)
                 return
             }
@@ -805,15 +787,15 @@ class Week extends Calendar {
                     if (initialMinutes >= 30) event.height = (46 - initialHour) * heightColumn
                     else event.height = (48 - (initialHour * 2)) * heightColumn
 
-                    const element = this.createHtml(event)
-                    this.matrizHourDay[event.index][index].appendChild(element)
+                    const element = WEEK.createHtml(event)
+                    WEEK.matrixHourDay[event.index][index].appendChild(element)
                     event.elements.push(element)
                 }
 
                 if (i > initialDay && i < finalDay) {
                     event.height = 48 * heightColumn
-                    const element = this.createHtml(event)
-                    this.matrizHourDay[0][index].appendChild(element)
+                    const element = WEEK.createHtml(event)
+                    WEEK.matrixHourDay[0][index].appendChild(element)
                     event.elements.push(element)
                 }
 
@@ -821,15 +803,15 @@ class Week extends Calendar {
                     if (finalMinutes >= 30) event.height = ((finalHour * 2) + 2) * heightColumn
                     else event.height = ((finalHour * 2) + 1) * heightColumn
 
-                    const element = this.createHtml(event)
-                    this.matrizHourDay[0][index].appendChild(element)
+                    const element = WEEK.createHtml(event)
+                    WEEK.matrixHourDay[0][index].appendChild(element)
                     event.elements.push(element)
                 }
 
                 index++
             }
         })
-    }
+    },
 
     createHtml(event) {
         const container = document.createElement('div')
@@ -851,22 +833,22 @@ class Week extends Calendar {
         container.appendChild(divHour)
 
         container.addEventListener('click', () => {
-            this.modal.open()
-            this.modal.renderEvent(event)
+            MODAL.open()
+            MODAL.renderEvent(event)
         })
 
         container.addEventListener('dragstart', () => {
-            this.eventDragged = event
+            CALENDAR.eventDragged = event
             container.classList.add('dragging')
         })
 
         container.addEventListener('dragend', () => container.classList.remove('dragging'))
 
         return container
-    }
+    },
 
     updatePosition(data) {
-        const eventDragged = this.eventDragged
+        const eventDragged = CALENDAR.eventDragged
         if (!eventDragged) return
 
         if (eventDragged.action == 'day') {
@@ -881,85 +863,81 @@ class Week extends Calendar {
             dataFinal.setDate(dataFinal.getDate() + duration)
             dataFinal.setMonth(dataFinal.getMonth() + 1)
 
-            eventDragged.initialDate = this.formatDate(dataInicial)
-            eventDragged.finalDate = this.formatDate(dataFinal)
+            eventDragged.initialDate = CALENDAR.formatDate(dataInicial)
+            eventDragged.finalDate = CALENDAR.formatDate(dataFinal)
 
         } else {
             eventDragged.finalDate = data.dataHour
         }
 
-        this.orderDates(eventDragged)
+        CALENDAR.orderDates(eventDragged)
 
         eventDragged.elements.forEach(element => element.remove())
-        this.render([eventDragged])
-    }
+        WEEK.render([eventDragged])
+    },
 }
 
-class Day extends Calendar {
-    constructor() {
-        super()
-        this.arrayHour = []
-        this.objHourDay = { mode: 'day' }
-    }
+const DAY = {
+    arrayHour: [],
+    objHourDay: { mode: 'day'},
 
     nextDate() {
-        this.day++
+        CALENDAR.day++
 
-        if (this.day > this.getLastDayThisMonth()) {
-            this.day = 1
-            this.month++
+        if (CALENDAR.day > CALENDAR.getLastDayThisMonth()) {
+            CALENDAR.day = 1
+            CALENDAR.month++
 
-            if (this.month > 12) {
-                this.month = 1
-                this.year++
+            if (CALENDAR.month > 12) {
+                CALENDAR.month = 1
+                CALENDAR.year++
             }
         }
-        this.init()
-        this.updateDates()
-    }
+        DAY.init()
+        CALENDAR.updateDates()
+    },
 
-    previusDate() {
-        this.day--
+    previousDate() {
+        CALENDAR.day--
 
-        if (this.day < 1) {
-            this.month--
-            this.day = new Date(this.year, this.month + 1, 0).getDate()
+        if (CALENDAR.day < 1) {
+            CALENDAR.month--
+            CALENDAR.day = new Date(CALENDAR.year, CALENDAR.month + 1, 0).getDate()
 
-            if (this.month < 1) {
-                this.month = 12
-                this.year--
+            if (CALENDAR.month < 1) {
+                CALENDAR.month = 12
+                CALENDAR.year--
             }
         }
-        this.init()
-        this.updateDates()
-    }
+        DAY.init()
+        CALENDAR.updateDates()
+    },
 
     init() {
-        this.mode = 'day'
-        this.container.innerHTML = ''
+        CALENDAR.container.innerHTML = ''
 
-        this.dayHtml.classList.remove('hide')
-        this.weekHtml.classList.add('hide')
-        this.monthHtml.classList.remove('hide')
+        CALENDAR.dayHtml.classList.remove('hide')
+        CALENDAR.weekHtml.classList.add('hide')
+        CALENDAR.monthHtml.classList.remove('hide')
 
         const container = document.createElement('div')
         container.classList.add('d-container-day')
 
-        container.appendChild(this.divWeek())
-        container.appendChild(this.divAllDay())
-        container.appendChild(this.divHorus())
+        container.appendChild(DAY.divWeek())
+        container.appendChild(DAY.divAllDay())
+        container.appendChild(DAY.divHorus())
 
-        this.container.appendChild(container)
-        this.render(this.events)
-    }
+        CALENDAR.container.appendChild(container)
+        DAY.render(CALENDAR.events)
+    },
 
     divWeek() {
         const divWeek = document.createElement('div')
-        const index = new Date(this.year, this.month, this.day).getDay()
-        divWeek.innerHTML = this.daysOfWeek[index]
+        const index = new Date(CALENDAR.year, CALENDAR.month, CALENDAR.day).getDay()
+        divWeek.innerHTML = CALENDAR.daysOfWeek[index]
         divWeek.classList.add('d-week')
         return divWeek
-    }
+    },
 
     divAllDay() {
         const divAllDay = document.createElement('div')
@@ -975,12 +953,12 @@ class Day extends Calendar {
         divAllDay.appendChild(area)
 
         area.addEventListener('click', () => {
-            this.modal.updateDate({ day: this.day, month: this.month, year: this.year, mode: 'onlyDay' })
-            this.modal.open()
+            MODAL.updateDate({ day: CALENDAR.day, month: CALENDAR.month, year: CALENDAR.year, mode: 'onlyDay' })
+            MODAL.open()
         })
 
         return divAllDay
-    }
+    },
 
     divHorus() {
         const divHorus = document.createElement('div')
@@ -1001,14 +979,14 @@ class Day extends Calendar {
             areaHour.hour = hours
             areaHour.minutes = minutes
 
-            this.arrayHour.push(areaHour)
+            DAY.arrayHour.push(areaHour)
 
-            areaHour.addEventListener('click', () => this.modal.open())
+            areaHour.addEventListener('click', () => MODAL.open())
 
             areaHour.addEventListener('dragenter', (e) => {
                 if (!e.target.classList.contains('d-area-hour')) return
                 if (areaHour.change) {
-                    this.updatePosition(areaHour.hour, areaHour.minutes)
+                    DAY.updatePosition(areaHour.hour, areaHour.minutes)
                     areaHour.change = false
                 }
             })
@@ -1017,17 +995,17 @@ class Day extends Calendar {
 
             areaHour.addEventListener('mousedown', (e) => {
                 if (!e.target.classList.contains('d-area-hour')) return
-                this.selecting = true
-                this.objHourDay.initial = areaHour.hour
+                CALENDAR.selecting = true
+                DAY.objHourDay.initial = areaHour.hour
             })
 
             areaHour.addEventListener('mousemove', () => {
-                if (!this.selecting) return
-                this.objHourDay.final = areaHour.hour
-                this.arrayHour.forEach(hour => {
+                if (!CALENDAR.selecting) return
+                DAY.objHourDay.final = areaHour.hour
+                DAY.arrayHour.forEach(hour => {
 
-                    if (hour.hour <= this.objHourDay.initial && hour.hour >= this.objHourDay.final ||
-                        hour.hour >= this.objHourDay.initial && hour.hour <= this.objHourDay.final) {
+                    if (hour.hour <= DAY.objHourDay.initial && hour.hour >= DAY.objHourDay.final ||
+                        hour.hour >= DAY.objHourDay.initial && hour.hour <= DAY.objHourDay.final) {
                         hour.classList.add('selected')
                     } else {
                         hour.classList.remove('selected')
@@ -1036,10 +1014,10 @@ class Day extends Calendar {
             })
 
             areaHour.addEventListener('mouseup', () => {
-                this.selecting = false
-                this.arrayHour.forEach(hour => hour.classList.remove('selected'))
-                this.modal.updateDate(this.objHourDay)
-                this.modal.open()
+                CALENDAR.selecting = false
+                DAY.arrayHour.forEach(hour => hour.classList.remove('selected'))
+                MODAL.updateDate(DAY.objHourDay)
+                MODAL.open()
             })
 
             divHorus.appendChild(hour)
@@ -1047,31 +1025,31 @@ class Day extends Calendar {
         }
 
         return divHorus
-    }
+    },
 
     updatePosition(hour, minutes) {
-        const eventDragged = this.eventDragged
+        const eventDragged = CALENDAR.eventDragged
         if (!eventDragged) return
 
         if (eventDragged.action == 'hourMais') {
             const newDate = new Date(eventDragged.initialDate)
             newDate.setHours(hour, minutes)
             newDate.setMonth(newDate.getMonth() + 1)
-            eventDragged.initialDate = this.formatDate(newDate)
+            eventDragged.initialDate = CALENDAR.formatDate(newDate)
         }
 
         if (eventDragged.action == 'hourMenos') {
             const newDate = new Date(eventDragged.finalDate)
             newDate.setHours(hour, minutes)
             newDate.setMonth(newDate.getMonth() + 1)
-            eventDragged.finalDate = this.formatDate(new Date(newDate).setHours(hour))
+            eventDragged.finalDate = CALENDAR.formatDate(new Date(newDate).setHours(hour))
         }
 
-        this.orderDates(eventDragged)
+        CALENDAR.orderDates(eventDragged)
 
         eventDragged.elements.forEach(e => e.remove())
-        this.render([eventDragged])
-    }
+        DAY.render([eventDragged])
+    },
 
     render(events) {
         events.forEach(event => {
@@ -1084,14 +1062,14 @@ class Day extends Calendar {
             const initialMinutes = new Date(event.initialDate).getMinutes()
             const finalMinutes = new Date(event.finalDate).getMinutes()
 
-            if (initialDay !== this.day || initialDate.getMonth() + 1 !== this.month || initialDate.getFullYear() !== this.year) return
+            if (initialDay !== CALENDAR.day || initialDate.getMonth() + 1 !== CALENDAR.month || initialDate.getFullYear() !== CALENDAR.year) return
 
             event.elements = []
             const heightColumn = 32.95
 
             if (event.allDay) {
                 event.height = heightColumn
-                const element = this.createHtml(event)
+                const element = DAY.createHtml(event)
                 event.elements.push(element)
                 document.querySelector('.d-area-all-day').appendChild(element)
                 return
@@ -1103,11 +1081,11 @@ class Day extends Calendar {
             if (finalMinutes >= 30) event.height = ((finalHour - initialHour) * 2 + 2) * heightColumn
             else event.height = ((finalHour - initialHour) * 2 + 1) * heightColumn
 
-            const element = this.createHtml(event)
+            const element = DAY.createHtml(event)
             event.elements.push(element)
             document.querySelectorAll('.d-area-hour')[event.index].appendChild(element)
         })
-    }
+    },
 
     createHtml(event) {
         const container = document.createElement('div')
@@ -1124,8 +1102,8 @@ class Day extends Calendar {
         container.appendChild(divDay)
 
         container.addEventListener('click', () => {
-            this.modal.open()
-            this.modal.renderEvent(event)
+            MODAL.open()
+            MODAL.renderEvent(event)
         })
 
         if (event.allDay) return container
@@ -1139,7 +1117,7 @@ class Day extends Calendar {
         container.draggable = 'true'
 
         container.addEventListener('dragstart', () => {
-            this.eventDragged = event
+            CALENDAR.eventDragged = event
             container.classList.add('dragging')
         })
 
@@ -1149,48 +1127,46 @@ class Day extends Calendar {
     }
 }
 
-class List extends Calendar{
-    constructor() {
-        super()
-    }
+const LIST = {
+    name: 'list',
 
     nextDate() {
-        this.month++
-        if (this.month > 12) {
-            this.month = 1
-            this.year++
+        CALENDAR.month++
+        if (CALENDAR.month > 12) {
+            CALENDAR.month = 1
+            CALENDAR.year++
         }
 
-        this.init()
-        this.updateDates()
-    }
+        LIST.init()
+        CALENDAR.updateDates()
+    },
 
-    previusDate() {
-        this.month--
-        if (this.month < 1) {
-            this.month = 12
-            this.year--
+    previousDate() {
+        CALENDAR.month--
+        if (CALENDAR.month < 1) {
+            CALENDAR.month = 12
+            CALENDAR.year--
         }
 
-        this.init()
-        this.updateDates()
-    }
+        LIST.init()
+        CALENDAR.updateDates()
+    },
 
     init() {
-        this.mode = 'list'
-        this.container.innerHTML = ''
+        CALENDAR.container.innerHTML = ''
 
-        this.dayHtml.classList.add('hide')
-        this.weekHtml.classList.add('hide')
-        this.monthHtml.classList.remove('hide')
+        CALENDAR.dayHtml.classList.add('hide')
+        CALENDAR.weekHtml.classList.add('hide')
+        CALENDAR.monthHtml.classList.remove('hide')
 
         const container = document.createElement('div')
         container.classList.add('l-container-list')
 
-        this.render(container, this.events)
+        LIST.render(container, CALENDAR.events)
 
-        this.container.appendChild(container)
-    }
+        CALENDAR.container.appendChild(container)
+    },
+
 
     render(containerList, events) {
         const placedDays = []
@@ -1204,39 +1180,39 @@ class List extends Calendar{
             const date = new Date(event.initialDate)
             const existingDay = placedDays.find(dias => dias.date.getTime() === date.getTime())
 
-            if (date.getMonth() + 1 !== this.month || date.getFullYear() !== this.year) return
+            if (date.getMonth() + 1 !== CALENDAR.month || date.getFullYear() !== CALENDAR.year) return
 
             if (existingDay) {
-                existingDay.element.appendChild(this.createHtml(event, date))
+                existingDay.element.appendChild(LIST.createHtml(event, date))
                 return
             }
 
             const container = document.createElement('div')
-            container.appendChild(this.createListHeader(date))
-            container.appendChild(this.createHtml(event))
+            container.appendChild(LIST.createListHeader(date))
+            container.appendChild(LIST.createHtml(event))
 
             divNone.remove()
 
             containerList.appendChild(container)
             placedDays.push({ date: date, element: container })
         })
-    }
+    },
 
     createListHeader(date) {
         const daySem = document.createElement('div')
         daySem.classList.add('l-day')
 
         const span = document.createElement('span')
-        span.innerHTML = `${date.getDate().toString().padStart(2, '0')} ${this.listMonths[date.getMonth() + 1]},  ${date.getFullYear()}`
+        span.innerHTML = `${date.getDate().toString().padStart(2, '0')} ${CALENDAR.listMonths[date.getMonth() + 1]},  ${date.getFullYear()}`
 
         const span2 = document.createElement('span')
-        span2.innerHTML = this.daysOfWeek[date.getDay()]
+        span2.innerHTML = CALENDAR.daysOfWeek[date.getDay()]
 
         daySem.appendChild(span)
         daySem.appendChild(span2)
 
         return daySem
-    }
+    },
 
     createHtml(event) {
         const initDate = new Date(event.initialDate)
@@ -1257,8 +1233,8 @@ class List extends Calendar{
         container.innerHTML = event.title
 
         eventList.addEventListener('click', () => {
-            this.modal.open()
-            this.modal.renderEvent(event)
+            MODAL.open()
+            MODAL.renderEvent(event)
         })
 
         eventList.appendChild(container)
@@ -1266,8 +1242,8 @@ class List extends Calendar{
         event.elements = [eventList]
 
         return eventList
-    }
+    },
 }
 
-const calendar = new Calendar()
-calendar.init()
+MODAL.init()
+CALENDAR.init()
