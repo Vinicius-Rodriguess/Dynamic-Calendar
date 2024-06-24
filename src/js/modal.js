@@ -1,192 +1,210 @@
-import { Calendar } from './calendar.js'
+import { CALENDAR } from './calendar.js'
 
-export class Modal {
-    constructor() {
-        this.element = document.querySelector(".mod-add-event")
-        this.form = document.querySelector("#modal-form")    
-        this.elementTag = document.querySelector(".mod-tags")
-        this.formTag = document.querySelector("#form-modalTags")
-        this.btnSave = document.querySelector("#btn-save-modal")
-        this.btnEdit = document.querySelector("#btn-edit-modal")
-        this.btnRemove = document.querySelector("#btn-remove")
-        this.btnClose = document.querySelector("#btn-close-modal")
-        this.event
-        this.inputTag
-        this.optionSelect = document.createElement("p")
-        this.tags = [
-            { name: "Urgente", color: "red", },
-            { name: "Importante", color: "orange", },
-            { name: "Normal", color: "blue", },
-            { name: "Secretaria", color: "purple", },
-            { name: "Financeiro", color: "gray", },
-        ]
-    }
+export const MODAL = {
+    element: document.querySelector('.mod-add-event'),
+    form: document.querySelector('#modal-form'),
+
+    elementTag: document.querySelector('.mod-tags'), 
+    formTag: document.querySelector('#form-modalTags'),
+
+    elementEvents: document.querySelector('.mod-events-hidden'),
+
+    btnSave: document.querySelector('#btn-save-modal'),
+    btnEdit: document.querySelector('#btn-edit-modal'),
+    btnRemove: document.querySelector('#btn-remove'),
+    btnClose: document.querySelector('#btn-close-modal'),
+    event: null,
+    inputTag: null,
+    optionSelect: document.createElement('p'),
+
+    tags: [
+        { name: 'Urgente', color: 'red', },
+        { name: 'Importante', color: 'orange', },
+        { name: 'Normal', color: 'blue', },
+        { name: 'Secretaria', color: 'purple', },
+        { name: 'Financeiro', color: 'gray', },
+    ],
 
     init() {
-        this.calendar = new Calendar()
+        document.querySelector('#btn-close-events').addEventListener("click", () => {
+            MODAL.close(MODAL.elementEvents)
+        })
 
-        document.querySelector("#btn-close-modal-tag").addEventListener("click", () => {
-            this.close(this.elementTag)
+        document.querySelector('#btn-close-modal-tag').addEventListener('click', () => {
+            MODAL.close(MODAL.elementTag)
         })
-        document.querySelector("#btn-save-modal-tag").addEventListener("click", () => {
-            this.createTag()
+        document.querySelector('#btn-save-modal-tag').addEventListener('click', () => {
+            MODAL.createTag()
         })
-        this.btnClose.addEventListener("click", () => {
-            this.close(this.element)
+
+        MODAL.btnClose.addEventListener('click', () => {
+            MODAL.close()
         })
-        this.btnSave.addEventListener("click", () => {
-            this.calendar.addEvent()
+
+        MODAL.btnSave.addEventListener('click', () => {
+            CALENDAR.addEvent()
         })
-        this.btnEdit.addEventListener("click", () => {
-            this.calendar.updateEvent(this.event)
-            this.close(this.element)
+
+        MODAL.btnEdit.addEventListener('click', () => {
+            CALENDAR.updateEvent(MODAL.event)
+            MODAL.close()
         })
-        this.btnRemove.addEventListener("click", () => {
-            this.calendar.removeEvent(this.event)
-            this.close(this.element)
+
+        MODAL.btnRemove.addEventListener('click', () => {
+            CALENDAR.removeEvent(MODAL.event)
+            MODAL.close()
         })
-        this.form.initialDate.addEventListener("input", () => {
-            if (this.form.finalDate.value == "" || this.form.allDay.checked) {
-                this.form.finalDate.value = this.form.initialDate.value
+
+        MODAL.form.initialDate.addEventListener('input', () => {
+            if (MODAL.form.finalDate.value == '' || MODAL.form.allDay.checked) {
+                MODAL.form.finalDate.value = MODAL.form.initialDate.value
             }
         })
-        this.form.allDay.addEventListener("input", () => {
-            if (this.form.finalDate.disabled) {
-                this.form.finalDate.disabled = false
-                this.form.finalDate.value = this.form.initialDate.value
+
+        MODAL.form.allDay.addEventListener('input', () => {
+            if (MODAL.form.finalDate.disabled) {
+                MODAL.form.finalDate.disabled = false
+                MODAL.form.finalDate.value = MODAL.form.initialDate.value
                 return
             }
-            this.form.finalDate.disabled = true
-            this.form.finalDate.value = this.form.initialDate.value
+            MODAL.form.finalDate.disabled = true
+            MODAL.form.finalDate.value = MODAL.form.initialDate.value
         })
 
-        this.createTags()
-    }
+        MODAL.createTags()
+    },
 
-    open(element) {
-        element.classList.remove("hide")
-    }
+    open( element = MODAL.element ) {
+        element.classList.remove('hide')
+    },
 
-    close(element) {
-        this.clean()
-        element.classList.add("hide")
-    }
+    close( element = MODAL.element ) {
+        MODAL.clean()
+        element.classList.add('hide')
+    },
 
     clean() {
-        this.optionSelect.innerHTML = "Escolha uma Tag"
-        this.form.reset()
-        this.formTag.reset()
-        this.btnRemove.classList.add("hide")
-        this.btnEdit.classList.add("hide")
-        this.btnSave.classList.remove("hide")
-        this.event = null
-    }
+        MODAL.optionSelect.innerHTML = 'Escolha uma Tag'
+        MODAL.form.reset()
+        MODAL.formTag.reset()
+        MODAL.btnRemove.classList.add('hide')
+        MODAL.btnEdit.classList.add('hide')
+        MODAL.btnSave.classList.remove('hide')
+        MODAL.event = null
+    },
 
     updateDate(data) {
-        if (data.mode == "onlyDay") {
-            const date = this.calendar.formatDate(new Date(data.year, data.month, data.day))
-            this.form.initialDate.value = date
-            this.form.finalDate.value = date
+        if (data.mode == 'onlyDay') {
+            const date = CALENDAR.formatDate(new Date(data.year, data.month, data.day))
+            MODAL.form.initialDate.value = date
+            MODAL.form.finalDate.value = date
             return
         }
 
-        let dateInitial = this.calendar.formatDate(data.initial)
-        let dateFinal = this.calendar.formatDate(data.final)
+        let dateInitial = CALENDAR.formatDate(data.initial)
+        let dateFinal = CALENDAR.formatDate(data.final)
 
-        if (data.mode == "day") {            
-            dateInitial = this.calendar.formatDate(new Date(this.calendar.year, this.calendar.month, this.calendar.day).setHours(data.initial))
-            dateFinal = this.calendar.formatDate(new Date(this.calendar.year, this.calendar.month, this.calendar.day).setHours(data.final))
+        if (data.mode == 'day') {            
+            dateInitial = CALENDAR.formatDate(new Date(CALENDAR.year, CALENDAR.month, CALENDAR.day).setHours(data.initial))
+            dateFinal = CALENDAR.formatDate(new Date(CALENDAR.year, CALENDAR.month, CALENDAR.day).setHours(data.final))
         }
 
-        if (data.mode == "gridWeek") {
-            dateInitial = this.calendar.formatDate(data.initial)
-            dateFinal = this.calendar.formatDate(data.final)
+        if (data.mode == 'gridWeek') {
+            dateInitial = CALENDAR.formatDate(data.initial)
+            dateFinal = CALENDAR.formatDate(data.final)
         }
 
         if (new Date(dateInitial) < new Date(dateFinal)) {
-            this.form.initialDate.value = dateInitial
-            this.form.finalDate.value = dateFinal
+            MODAL.form.initialDate.value = dateInitial
+            MODAL.form.finalDate.value = dateFinal
         } else {
-            this.form.initialDate.value = dateFinal
-            this.form.finalDate.value = dateInitial
+            MODAL.form.initialDate.value = dateFinal
+            MODAL.form.finalDate.value = dateInitial
         }
-    }
+    },
 
     renderEvent(event) {
-        this.event = event
-        this.form.title.value = event.title
-        this.form.description.value = event.description
-        this.form.initialDate.value = event.initialDate
-        this.form.finalDate.value = event.finalDate
-        if (event.allDay) this.form.allDay.checked = true
-        this.changeOptionSelect(event.tag)
-        this.btnRemove.classList.remove("hide")
-        this.btnEdit.classList.remove("hide")
-        this.btnSave.classList.add("hide")
-    }
+        MODAL.event = event
+        MODAL.form.title.value = event.title
+        MODAL.form.description.value = event.description
+        MODAL.form.initialDate.value = event.initialDate
+        MODAL.form.finalDate.value = event.finalDate
+        if (event.allDay) MODAL.form.allDay.checked = true
+        MODAL.changeOptionSelect(event.tag)
+        MODAL.btnRemove.classList.remove('hide')
+        MODAL.btnEdit.classList.remove('hide')
+        MODAL.btnSave.classList.add('hide')
+    },
 
     createTags() {
-        this.element.addEventListener("click", (e) => {
-            if (e.target.classList.contains("mod-option-select") || e.target.classList.contains("mod-container-tag")) return
-            if (!e.target.classList.contains("mod-container-options")) containerOptions.classList.add("hide")
+        MODAL.element.addEventListener('click', (e) => {
+            if (e.target.classList.contains('mod-option-select') || e.target.classList.contains('mod-container-tag')) return
+            if (!e.target.classList.contains('mod-container-options')) containerOptions.classList.add('hide')
         })
 
-        const containerTag = document.querySelector(".mod-container-tag")
-        containerTag.addEventListener("click", () => containerOptions.classList.toggle("hide"))
+        const containerTag = document.querySelector('.mod-container-tag')
+        containerTag.addEventListener('click', () => containerOptions.classList.toggle('hide'))
 
-        this.optionSelect.classList.add("mod-option-select")
-        this.optionSelect.innerHTML = "Escolha uma Tag"
+        MODAL.optionSelect.classList.add('mod-option-select')
+        MODAL.optionSelect.innerHTML = 'Escolha uma Tag'
 
-        const containerOptions = document.createElement("div")
-        containerOptions.classList.add("mod-container-options", "hide")
+        const containerOptions = document.createElement('div')
+        containerOptions.classList.add('mod-container-options', 'hide')
 
-        this.tags.forEach(tag => {
-            const option = document.createElement("p")
-            option.classList.add("mod-option")
+        MODAL.tags.forEach(tag => {
+            const option = document.createElement('p')
+            option.classList.add('mod-option')
 
-            const color = this.createColor(tag)
+            const color = MODAL.createColor(tag)
 
             option.appendChild(color)
             option.innerHTML += tag.name
 
-            option.addEventListener("click", () => this.changeOptionSelect(tag))
+            option.addEventListener('click', () => MODAL.changeOptionSelect(tag))
 
             containerOptions.appendChild(option)
         })
 
-        const newTag = document.createElement("p")
-        newTag.classList.add("mod-option")
-        newTag.innerHTML = "+ Nova Tag"
-        newTag.addEventListener("click", () => this.open(this.elementTag))
+        const newTag = document.createElement('p')
+        newTag.classList.add('mod-option')
+        newTag.innerHTML = '+ Nova Tag'
+        newTag.addEventListener('click', () => MODAL.open(MODAL.elementTag))
 
         containerOptions.appendChild(newTag)
 
-        containerTag.appendChild(this.optionSelect)
+        containerTag.appendChild(MODAL.optionSelect)
         containerTag.appendChild(containerOptions)
-    }
+    },
 
     createColor(tag) {
-        const color = document.createElement("span")
-        color.classList.add("mod-circle")
+        const color = document.createElement('span')
+        color.classList.add('mod-circle')
         color.style.backgroundColor = tag.color
         return color
-    }
+    },
 
     changeOptionSelect(tag) {
-        this.optionSelect.innerHTML = ""
-        this.optionSelect.appendChild(this.createColor(tag))
-        this.optionSelect.innerHTML += tag.name
-        this.inputTag = tag
-    }
+        MODAL.optionSelect.innerHTML = ''
+        MODAL.optionSelect.appendChild(MODAL.createColor(tag))
+        MODAL.optionSelect.innerHTML += tag.name
+        MODAL.inputTag = tag
+    },
 
     createTag() {
         const newTag = {
-            name: this.formTag.title.value,
-            color: this.formTag.color.value
+            name: MODAL.formTag.title.value,
+            color: MODAL.formTag.color.value
         }
 
-        this.tags.push(newTag)
-        this.createTags()
-        this.close(this.elementTag)
-    }
+        MODAL.tags.push(newTag)
+        MODAL.createTags()
+        MODAL.close(MODAL.elementTag)
+    },
+
+    showEvent(hiddenChildren) {
+        hiddenChildren.forEach(children => {
+            children.classList.remove("hide")
+            document.querySelector(".results").appendChild(children)
+        })
+    },
 }
