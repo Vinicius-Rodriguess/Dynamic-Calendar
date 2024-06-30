@@ -1,0 +1,105 @@
+.w-container-week {
+    background-color: #ccc;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-height: 31rem;
+    padding: 1px;
+}
+
+.w-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    background-color: #ccc;
+    gap: 1px;
+}
+
+.w-day-week {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.5rem;
+    padding: 0.5rem;
+    font-weight: bold;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #5d596c;
+    background-color: #ffffff;
+}
+
+.w-container-hours {
+    overflow-y: auto;
+}
+
+
+
+.w-all-day-txt {
+    display: flex;
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.w-area {
+    background-color: #fff;
+    height: 5rem;
+    cursor: pointer;
+    position: relative;
+    justify-content: space-between;
+    display: flex;
+}
+
+.w-all-day {
+    padding: 0.3rem;
+}
+
+.w-number-hour {
+    background-color: #fff;
+    height: 32px;
+    user-select: none;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.w-hour {
+    height: 32px;
+    user-select: none;
+}
+
+.w-today  {
+    background-color: rgb(238, 238, 238);
+}
+
+.w-event {
+    z-index: 1;
+    border-radius: 0.2rem;
+    color: #fff;
+    width: 50%;
+    border-radius: 0.2rem;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.w-event-value {
+    text-align: center;
+    cursor: grab;
+    border-radius: 0.2rem;
+    flex: 1;
+}
+
+.w-tip {
+    border-radius: 0.2rem;
+    max-height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: move;
+    width: 100%;
+}
