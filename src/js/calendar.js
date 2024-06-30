@@ -1,4 +1,4 @@
-import { MODAL } from './modal.js'
+import { MODAL } from '../../src/js/modal.js'
 import { MONTH } from './month.js'
 import { WEEK } from './week.js'
 import { DAY } from './day.js'
